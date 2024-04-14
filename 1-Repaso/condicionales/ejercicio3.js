@@ -1,3 +1,6 @@
+// Ejercicio 3 - Desarrolla un programa que solicite al usuario ingresar dos números y muestre
+// el mayor de ellos.
+
 const num1 = parseFloat(prompt('Ingrese el primer número:'))
 
 const num2 = parseFloat(prompt('Ingrese el segundo número:'))

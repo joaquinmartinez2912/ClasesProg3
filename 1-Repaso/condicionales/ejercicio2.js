@@ -1,3 +1,6 @@
+// Ejercicio 2 - Crea un programa que pida al usuario ingresar un número y luego determine si es positivo,
+// negativo o cero.
+
 const numero = parseFloat(prompt('Ingrese un numero:'))
 
 const referencia = 0
