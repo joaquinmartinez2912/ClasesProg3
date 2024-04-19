@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100&display=swap');
+
+:root{
+    --font-logo: 'Be Vietnam Pro';
+}
+
+p {
+    font-size: 35px;
+    font-family: var(--font-logo);
+}
+
+#caja_uno  {
+    display: flex;
+    justify-content: space-around;
+}
+
+#caja_uno button {
+    margin: 2px;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+li::before {
+    content: '»'; 
+    position: absolute;
+    left: -10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000; 
+}
+
+  li button {
+    margin-left: auto;
+  }

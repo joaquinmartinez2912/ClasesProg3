@@ -16,7 +16,9 @@ const agregarTarea = (e) => {
   if (tarea !== '') { // Verificar si el textarea no está vacío
     const item = document.createElement('li')
 
-    const textoTarea = document.createTextNode(tarea)
+    const p = document.createTextNode(tarea);
+    const textoTarea = document.createElement('p')
+    textoTarea.appendChild(p)
 
     const botonEliminar = document.createElement('button')
     botonEliminar.textContent = 'Eliminar' 
@@ -32,13 +34,18 @@ const agregarTarea = (e) => {
     botorFinalizar.classList.add('btn', 'btn-success', 'ml-5')
 
     botorFinalizar.addEventListener('click', function () {
-      item.removeChild(botorFinalizar)
+      caja_uno.removeChild(botorFinalizar)
       listaToDoTerminadas.appendChild(item)
     })
 
+    const caja_uno = document.createElement('div')
+    caja_uno.id = "caja_uno"
+
+    caja_uno.appendChild(botorFinalizar)
+    caja_uno.appendChild(botonEliminar)
+
     item.appendChild(textoTarea)
-    item.appendChild(botorFinalizar)
-    item.appendChild(botonEliminar)
+    item.appendChild(caja_uno)
 
     listaToDoEnProceso.appendChild(item)
     formTarea.reset()

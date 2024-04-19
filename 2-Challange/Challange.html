@@ -5,47 +5,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/mystyles.css">
   <title>Lista de numeros</title>
-  <style>
-    /* Estilos adicionales */
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 5px;
-    }
-
-    li button {
-      margin-left: auto;
-    }
-  </style>
 </head>
 
-<body>
-  <h2>Agregar Tarea</h2>
-  <div class="container bg-primary py-3">
-    <form id="formTarea">
-      <div class="mb-3">
-        <textarea class="form-control" id="tarea" name="tarea" rows="2" placeholder="Escriba su tarea aqui"></textarea>
-      </div>
-      <button type="submit" class="btn btn-light">Agregar</button>
-    </form>
-  </div>
-
+<body class="bg-light">
+  <header>
+    <h2>To Do List</h2>
+    <div class="container bg-primary py-3">
+      <form id="formTarea">
+        <div class="mb-3">
+          <textarea class="form-control" id="tarea" name="tarea" rows="2" placeholder="Escriba su tarea aqui"></textarea>
+        </div>
+        <button type="submit" class="btn btn-light">Agregar</button>
+      </form>
+    </div>
+  </header> 
   <br>
 
-  <h2>Tareas en Proceso</h2>
-  <div class="container bg-warning py-5">   
-    <ul id="listaToDoEnProceso"></ul>
-  </div>
+  <main>
+    <div class="row container-fluid">
+      <div class="col-6">
+        <h3>Tareas en Proceso</h3>
+        <ul id="listaToDoEnProceso" class="bg-warning py-5"></ul>
+     </div>
+     
+     <div class="col-6">
+      <h3>Tareas Finalizadas</h3>
+          <ul id="listaToDoTerminadas" class="bg-success py-5"></ul>
+     </div>
 
-  <br>
-
-  <h2>Tareas Finalizadas</h2>
-  <div class="container bg-success py-5">
-    <ul id="listaToDoTerminadas"></ul>
   </div>
-  
+  </main>
   <script src="Challange.js"></script>
 </body>
 
