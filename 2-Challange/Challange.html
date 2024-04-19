@@ -6,13 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/mystyles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <title>Lista de numeros</title>
 </head>
 
-<body class="bg-light">
-  <header>
-    <h2>To Do List</h2>
-    <div class="container bg-primary py-3">
+<body >
+  <header >
+    <div style=" display: flex; flex-direction: row">
+      <i class="bi bi-check2-circle"></i>
+      <h2 class="titulo">To Do List</h2>
+    </div>
+    <div class="container  py-3">
       <form id="formTarea">
         <div class="mb-3">
           <textarea class="form-control" id="tarea" name="tarea" rows="2" placeholder="Escriba su tarea aqui"></textarea>
@@ -21,18 +25,17 @@
       </form>
     </div>
   </header> 
-  <br>
 
   <main>
-    <div class="row container-fluid">
+    <div id="fila" class="row container-fluid" style="margin: 0px;padding: 0px;">
       <div class="col-6">
         <h3>Tareas en Proceso</h3>
-        <ul id="listaToDoEnProceso" class="bg-warning py-5"></ul>
+        <ul id="listaToDoEnProceso" class=" py-5"></ul>
      </div>
      
-     <div class="col-6">
+     <div id="gradienteTerminadas" class="col-6">
       <h3>Tareas Finalizadas</h3>
-          <ul id="listaToDoTerminadas" class="bg-success py-5"></ul>
+          <ul id="listaToDoTerminadas" class=" py-5"></ul>
      </div>
 
   </div>

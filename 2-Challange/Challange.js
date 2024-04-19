@@ -16,17 +16,17 @@ const agregarTarea = (e) => {
   if (tarea !== '') { // Verificar si el textarea no está vacío
     const item = document.createElement('li')
 
-    const p = document.createTextNode(tarea);
+    const p = document.createTextNode(tarea)
     const textoTarea = document.createElement('p')
     textoTarea.appendChild(p)
 
     const botonEliminar = document.createElement('button')
-    botonEliminar.textContent = 'Eliminar' 
+    botonEliminar.textContent = 'Eliminar'
     botonEliminar.classList.add('btn', 'btn-danger', 'ml-5') // Agregar clases de Bootstrap al botón
 
     // Agregar un evento click al botón para eliminar la tarea
     botonEliminar.addEventListener('click', function () {
-      item.remove() 
+      item.remove()
     })
 
     const botorFinalizar = document.createElement('button')
@@ -39,7 +39,7 @@ const agregarTarea = (e) => {
     })
 
     const caja_uno = document.createElement('div')
-    caja_uno.id = "caja_uno"
+    caja_uno.id = 'caja_uno'
 
     caja_uno.appendChild(botorFinalizar)
     caja_uno.appendChild(botonEliminar)
@@ -53,4 +53,3 @@ const agregarTarea = (e) => {
 }
 
 formTarea.addEventListener('submit', agregarTarea) // Agrego la funcion al submit del formulario.
-

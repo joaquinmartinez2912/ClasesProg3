@@ -2,11 +2,46 @@
 
 :root{
     --font-logo: 'Be Vietnam Pro';
+    --color-first: #A9CCE3;
+    --color-Second:#2471A3;
+    --color-third: #6ac494 ;
+    --color-fourth: #8be5c7;  
+    --color-fiveth: #f0f348 ;
+    --color-sixth: #e6e8e0;  
+}
+
+header{
+    background-image: linear-gradient(to bottom, var(--color-Second), var(--color-first) );
+    border: 1px solid black;
+}
+
+.titulo {
+    font-family: 'Arial'; 
+    font-size: 50px; 
+    color: #1b2634; 
+    font-weight: 700; 
+    text-align: start; 
+    text-shadow: 0.5px 0.5px 0.5px rgba(195, 187, 187, 0.5);
+    margin-bottom: 20px; 
+}
+
+.bi-check2-circle {
+    font-size: 35px; 
+    color: #07111c; 
+    margin-right: 20px; 
+}
+
+h3{
+    font-family: var(--font-logo);
+    font-weight: bold;
+    font-style: italic;
 }
 
 p {
     font-size: 35px;
     font-family: var(--font-logo);
+    font-weight: bold;
+    margin-left: 20px;
 }
 
 #caja_uno  {
@@ -14,8 +49,18 @@ p {
     justify-content: space-around;
 }
 
+#fila{
+    background-image: linear-gradient(to right, var(--color-sixth), var(--color-third) );
+}
+
+#gradienteTerminadas {
+    border-left: 5px solid #ccc;
+    box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.5); 
+    padding: 10px; 
+} 
+
 #caja_uno button {
-    margin: 2px;
+    margin: 10px;
 }
 
 li {
@@ -23,13 +68,17 @@ li {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    border: 0.5px solid black;
+    border-radius: 0px 25px 25px 0px;
+    margin-bottom: 0.5px;
 }
 
 li::before {
     content: '»'; 
+    font-size: 50px;
     position: absolute;
-    left: -10px; 
-    top: 50%;
+    left: -30px; 
+    top: 30%;
     transform: translateY(-50%);
     color: #000; 
 }
@@ -37,3 +86,7 @@ li::before {
   li button {
     margin-left: auto;
   }
+
+.rounded-button {
+    border-radius: 10px; /* Redondea los bordes del botón */
+}
