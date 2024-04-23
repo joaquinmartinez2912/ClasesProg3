@@ -1,55 +1,99 @@
 // Requisitos:
 // El usuario debe poder eliminar tareas de la lista.
+// El usuario debe poder agregar nuevas tareas a la lista.
 // El usuario debe poder marcar las tareas como completadas.
 // El usuario debe poder ver todas las tareas pendientes y las completadas.
 // Usar HTML Y css para adaptarlo a la web.
 // Pueden utilizar librerias por ejemplo bootstrap, etc.
 
-// El usuario debe poder agregar nuevas tareas a la lista.
 const listaToDoEnProceso = document.getElementById('listaToDoEnProceso')
 const listaToDoTerminadas = document.getElementById('listaToDoTerminadas')
-const formTarea = document.getElementById('formTarea') // Levanto todo lo que esta en el formulario.
+const formTarea = document.getElementById('formTarea') // Trae el submit del formulario.
+
+// Para cargar las tareas que estan guardadas en localStorage.
+const cargarTareas = () => {
+  const tareasGuardadas = JSON.parse(localStorage.getItem('tareas'))
+
+  tareasGuardadas.forEach(tarea => {
+    const item = crearItemTarea(tarea.texto, tarea.completada)
+
+    if (tarea.completada) {
+      listaToDoTerminadas.appendChild(item)
+    } else {
+      listaToDoEnProceso.appendChild(item)
+    }
+  })
+}
+
+// Para guardar las tareas que estan guardadas en localStorage.
+const guardarTareas = () => {
+  const tareas = []
+
+  listaToDoEnProceso.querySelectorAll('li').forEach(item => {
+    const tareaText = item.querySelector('p').textContent
+    tareas.push({ texto: tareaText, completada: false })
+  })
+
+  listaToDoTerminadas.querySelectorAll('li').forEach(item => {
+    const tareaText = item.querySelector('p').textContent
+    tareas.push({ texto: tareaText, completada: true })
+  })
+
+  localStorage.setItem('tareas', JSON.stringify(tareas))
+}
+
+// Para crear la estrucutra de HTML donde se van a guardar los objetos del localstorage.
+const crearItemTarea = (texto, completada = false) => {
+  const item = document.createElement('li')
+
+  const textoTarea = document.createElement('p')
+  textoTarea.textContent = texto
+
+  const botonEliminar = document.createElement('button')
+  botonEliminar.textContent = 'Eliminar'
+  botonEliminar.classList.add('btn', 'btn-danger', 'ml-5')
+  botonEliminar.addEventListener('click', () => {
+    item.remove()
+    guardarTareas()
+  })
+
+  const botonFinalizar = document.createElement('button')
+  botonFinalizar.textContent = 'Finalizar'
+  botonFinalizar.classList.add('btn', 'btn-success', 'ml-5')
+  botonFinalizar.addEventListener('click', () => {
+    listaToDoEnProceso.removeChild(item)
+    listaToDoTerminadas.appendChild(item)
+    contenedorBotones.removeChild(botonFinalizar)
+    guardarTareas()
+  })
+
+  const contenedorBotones = document.createElement('div')
+  contenedorBotones.id = 'caja_uno'
+  if (completada) {
+    contenedorBotones.appendChild(botonEliminar)
+  } else {
+    contenedorBotones.appendChild(botonFinalizar)
+    contenedorBotones.appendChild(botonEliminar)
+  }
+
+  item.appendChild(textoTarea)
+  item.appendChild(contenedorBotones)
+
+  return item
+}
 
 const agregarTarea = (e) => {
   e.preventDefault()
-  const tarea = formTarea.elements.tarea.value // "tarea" es el id del "textarea".
-  if (tarea !== '') { // Verificar si el textarea no está vacío
-    const item = document.createElement('li')
+  const tareaTexto = formTarea.elements.tarea.value
 
-    const p = document.createTextNode(tarea)
-    const textoTarea = document.createElement('p')
-    textoTarea.appendChild(p)
+  if (tareaTexto !== '') {
+    const nuevaTarea = crearItemTarea(tareaTexto)
 
-    const botonEliminar = document.createElement('button')
-    botonEliminar.textContent = 'Eliminar'
-    botonEliminar.classList.add('btn', 'btn-danger', 'ml-5') // Agregar clases de Bootstrap al botón
-
-    // Agregar un evento click al botón para eliminar la tarea
-    botonEliminar.addEventListener('click', function () {
-      item.remove()
-    })
-
-    const botorFinalizar = document.createElement('button')
-    botorFinalizar.textContent = 'Finalizar'
-    botorFinalizar.classList.add('btn', 'btn-success', 'ml-5')
-
-    botorFinalizar.addEventListener('click', function () {
-      caja_uno.removeChild(botorFinalizar)
-      listaToDoTerminadas.appendChild(item)
-    })
-
-    const caja_uno = document.createElement('div')
-    caja_uno.id = 'caja_uno'
-
-    caja_uno.appendChild(botorFinalizar)
-    caja_uno.appendChild(botonEliminar)
-
-    item.appendChild(textoTarea)
-    item.appendChild(caja_uno)
-
-    listaToDoEnProceso.appendChild(item)
+    listaToDoEnProceso.appendChild(nuevaTarea)
     formTarea.reset()
+    guardarTareas()
   }
 }
 
-formTarea.addEventListener('submit', agregarTarea) // Agrego la funcion al submit del formulario.
+formTarea.addEventListener('submit', agregarTarea)
+window.addEventListener('load', cargarTareas)
