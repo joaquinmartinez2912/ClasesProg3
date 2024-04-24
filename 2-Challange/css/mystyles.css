@@ -90,3 +90,11 @@ li::before {
 .rounded-button {
     border-radius: 10px; /* Redondea los bordes del botón */
 }
+
+#listaToDoEnProceso:empty::before {
+    content: "Sin tareas en proceso";
+}
+
+#listaToDoTerminadas:empty::before {
+    content: "Sin tareas terminadas";
+}
