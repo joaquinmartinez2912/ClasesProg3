@@ -19,7 +19,7 @@ const cargarTareas = () => {
     ];
 
     let productos = localStorage.getItem('productos');  
-    console.log(productos)
+
 
     if (productos == null) {
         const listaOriginalJSON = JSON.stringify(listaOriginal);
@@ -28,33 +28,81 @@ const cargarTareas = () => {
     
     productos = localStorage.getItem('productos');  
     const productosGuardados = JSON.parse(productos);
-    console.log(productos)
-    console.log(productosGuardados)
+
 
     productosGuardados.forEach(producto => {
-      const itemProducto = crearItemProducto(producto.nombre)
+      const itemProducto = crearItemProducto(producto)
 
         listaProductos.appendChild(itemProducto)      
     })
   }
   
-  const crearItemProducto = (nombre) => {
+  const crearItemProducto = (producto) => {
     const item = document.createElement('li')
   
     const nombreProducto = document.createElement('p')
-    nombreProducto.textContent = nombre
+    nombreProducto.textContent = producto.nombre
+
+    const contadorHTML = document.createElement('p');
+    contadorHTML.id = "contadorHTML";
+    contadorHTML.textContent = "0";
+    contadorHTML.style.textAlign = "center"; 
+    contadorHTML.style.margin = "2px"; 
+    contadorHTML.style.padding = "2px"; 
+
+    let contadorJS = parseInt(contadorHTML.textContent)
     
     const botonComprar = document.createElement('button')
     botonComprar.textContent = 'Comprar'
-    botonComprar.classList.add('btn', 'btn-success', 'ml-5')
-    botonComprar.addEventListener('click', () => {
-        // Aca iria la logica del proceso de compra
-    })
-    
+    botonComprar.classList.add('btn', 'btn-primary', 'me-4')
+    botonComprar.style.marginLeft = "20px"
+    botonComprar.addEventListener('click', () => procesoDeCompra( producto, contadorJS)
+  )
+  
+
+    const BotonSumar = document.createElement('button')
+    BotonSumar.textContent = '+'
+    BotonSumar.classList.add('btn','btn-success','btn-s')
+    BotonSumar.addEventListener('click', () => {
+      contadorJS++;
+      contadorHTML.textContent = contadorJS;
+    } )
+
+    const BotonRestar = document.createElement('button')
+    BotonRestar.textContent = '-'
+    BotonRestar.classList.add('btn','btn-danger','btn-s')
+    BotonRestar.addEventListener('click', () => {
+      if (contadorJS <= 0) {
+        contadorHTML.textContent = 0;
+      } else {
+        contadorJS--;
+        contadorHTML.textContent = contadorJS;
+      }
+    } )
+
+    const contenedorBotones = document.createElement('div')
+    contenedorBotones.id = 'caja_uno'
+    contenedorBotones.appendChild(BotonSumar);
+    contenedorBotones.appendChild(contadorHTML);
+    contenedorBotones.appendChild(BotonRestar);
+    contenedorBotones.appendChild(botonComprar);
+
+
     item.appendChild(nombreProducto)
-    item.appendChild(botonComprar)
+    item.appendChild(contenedorBotones)
   
     return item
+  }
+
+  const procesoDeCompra = (producto, prodPedidos) => {
+    if (prodPedidos > producto.stock) {
+      alert("No tenemos wacho")
+    } else {
+      alert ("ia tu sabe!!")
+      console.log(producto.id)
+      console.log(producto.stock)
+      console.log(prodPedidos)
+    }
   }
 
   window.addEventListener('load', cargarTareas)
