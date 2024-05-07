@@ -43,9 +43,15 @@ const agregarJugador = async () => {
 };
 
 
+// Funcion que crea tabla que se va a usar para mostrar elementos.
+
+
 // Función asíncrona para listar todos los jugadores del equipo
 const listarJugadores = async () => {
     // Implementación para listar todos los jugadores
+    let jugadores = obtenerJugadoresLocalStorage();
+
+
 };
 
 // Función asíncrona para asignar una nueva posición a un jugador
