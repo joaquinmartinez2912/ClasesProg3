@@ -50,6 +50,7 @@ const agregarJugador = async () => {
 const listarJugadores = async () => {
     // Implementación para listar todos los jugadores
     let jugadores = obtenerJugadoresLocalStorage();
+    
 
 
 };
