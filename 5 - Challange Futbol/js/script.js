@@ -1,4 +1,4 @@
-// Función para obtener los jugadores del localStorage
+ // Función para obtener los jugadores del localStorage
 const obtenerJugadoresLocalStorage = () => {
     const jugadoresString = localStorage.getItem('jugadores');
     return jugadoresString ? JSON.parse(jugadoresString) : [];
@@ -10,13 +10,15 @@ const guardarJugadoresLocalStorage = (jugadores) => {
 };
 
 // Función asíncrona para agregar un nuevo jugador al equipo usando un prompt de HTML
+let idJugador = parseInt(0)
 const agregarJugador = async () => {
     try {
         // Solicitar al usuario que ingrese los datos del jugador
         const nombre = prompt("Ingrese el nombre del jugador:");
         const edad = parseInt(prompt("Ingrese la edad del jugador:"));
         const posicion = prompt("Ingrese la posición del jugador:");
-
+        const id = idJugador++
+     
         // Obtener los jugadores del localStorage
         let jugadores = obtenerJugadoresLocalStorage();
 
@@ -27,7 +29,7 @@ const agregarJugador = async () => {
         }
 
         // Agregar el nuevo jugador al array de jugadores
-        jugadores.push({ nombre, edad, posicion });
+        jugadores.push({id, nombre, edad, posicion });
 
         // Guardar los jugadores actualizados en el localStorage
         guardarJugadoresLocalStorage(jugadores);
@@ -43,21 +45,55 @@ const agregarJugador = async () => {
 };
 
 
-// Funcion que crea tabla que se va a usar para mostrar elementos.
+// Funcion que crea li que se va a usar para mostrar elementos.
+const crearItemJugador = (jugador) => {
+    const item = document.createElement('li')
 
+    const DatosJugador = document.createElement('p')
+    DatosJugador.textContent = `Nombre: ${jugador.nombre} - Edad: ${jugador.edad} - Posición: ${jugador.posicion}`
+
+    item.appendChild(DatosJugador)
+
+    return item
+}
 
 // Función asíncrona para listar todos los jugadores del equipo
+const listaJugadores = document.getElementById("listaJugadores")
+let estadoListaJugadores = "inactivo"
+
 const listarJugadores = async () => {
-    // Implementación para listar todos los jugadores
-    let jugadores = obtenerJugadoresLocalStorage();
+    // Implementación para listar todos los jugadores--AGREGAR LOGICA DE TRY/CATCH
+    if (estadoListaJugadores === "inactivo") {
+        let jugadores = obtenerJugadoresLocalStorage();
     
+        jugadores.forEach(element => {
+            const jugador = crearItemJugador(element)
+            listaJugadores.appendChild(jugador)
+            console.log(element.nombre)
+        });
 
-
+        estadoListaJugadores = "activa"
+    } else if (estadoListaJugadores === "activa") {
+        const arrayListaJugadores = Array.from(listaJugadores.childNodes)
+        arrayListaJugadores.forEach(element => {
+            listaJugadores.removeChild(element)
+        });
+        estadoListaJugadores = "inactivo"
+    }
 };
 
 // Función asíncrona para asignar una nueva posición a un jugador
 const asignarPosicion = async (nombreJugador, nuevaPosicion) => {
-    // Implementación para asignar una nueva posición a un jugador
+    // Implementación para asignar una nueva posición a un jugador--AGREGAR LOGICA DE TRY/CATCH
+    let jugadores = obtenerJugadoresLocalStorage();
+
+    const jugadorModificado = jugadores.find((j) => j.id === nombreJugador.id)
+
+    if (jugadorModificado){
+        nombreJugador.posicion = nuevaPosicion
+    }
+
+    guardarJugadoresLocalStorage(jugadores);
 };
 
 // Función asíncrona para realizar un cambio durante un partido
