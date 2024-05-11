@@ -9,15 +9,27 @@ const guardarJugadoresLocalStorage = (jugadores) => {
     localStorage.setItem('jugadores', JSON.stringify(jugadores));
 };
 
+const crearId = () => {
+    const jugadoresString = localStorage.getItem('jugadores');
+    const listaId = jugadoresString ? JSON.parse(jugadoresString) : []
+    let id = ""
+    if (listaId.length == 0) {
+        id = 0
+    } else {
+        id = parseInt(listaId.length)
+    }
+    return id
+}
+
 // Función asíncrona para agregar un nuevo jugador al equipo usando un prompt de HTML
-let idJugador = parseInt(0)
+
 const agregarJugador = async () => {
     try {
         // Solicitar al usuario que ingrese los datos del jugador
+        const id = crearId()
         const nombre = prompt("Ingrese el nombre del jugador:");
         const edad = parseInt(prompt("Ingrese la edad del jugador:"));
         const posicion = prompt("Ingrese la posición del jugador:");
-        const id = idJugador++
      
         // Obtener los jugadores del localStorage
         let jugadores = obtenerJugadoresLocalStorage();
@@ -66,34 +78,34 @@ const listarJugadores = async () => {
     if (estadoListaJugadores === "inactivo") {
         let jugadores = obtenerJugadoresLocalStorage();
     
-        jugadores.forEach(element => {
-            const jugador = crearItemJugador(element)
+        jugadores.forEach(itemJugador => {
+            const jugador = crearItemJugador(itemJugador)
             listaJugadores.appendChild(jugador)
-            console.log(element.nombre)
         });
 
         estadoListaJugadores = "activa"
     } else if (estadoListaJugadores === "activa") {
         const arrayListaJugadores = Array.from(listaJugadores.childNodes)
-        arrayListaJugadores.forEach(element => {
-            listaJugadores.removeChild(element)
+        arrayListaJugadores.forEach(jugador => {
+            listaJugadores.removeChild(jugador)
         });
         estadoListaJugadores = "inactivo"
     }
 };
 
 // Función asíncrona para asignar una nueva posición a un jugador
-const asignarPosicion = async (nombreJugador, nuevaPosicion) => {
+const asignarPosicion = async (idJugador, nuevaPosicion) => {
     // Implementación para asignar una nueva posición a un jugador--AGREGAR LOGICA DE TRY/CATCH
     let jugadores = obtenerJugadoresLocalStorage();
 
-    const jugadorModificado = jugadores.find((j) => j.id === nombreJugador.id)
+    const jugadorModificado = jugadores.find((j) => j.id === idJugador)
 
     if (jugadorModificado){
-        nombreJugador.posicion = nuevaPosicion
+        jugadores[jugadorModificado.id].posicion = nuevaPosicion
     }
 
     guardarJugadoresLocalStorage(jugadores);
+    listarJugadores()
 };
 
 // Función asíncrona para realizar un cambio durante un partido
@@ -103,11 +115,26 @@ const realizarCambio = async (jugadorEntrante, jugadorSaliente) => {
 
 // Función principal asíncrona que interactúa con el usuario
 const main = async () => {
-    try {
-        // Lógica para interactuar con el usuario y llamar a las funciones adecuadas
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    // let funcionLLamada = "1"
+    const botoneraUsuario = document.getElementById("botoneraUsuario")
+    botoneraUsuario.addEventListener("click", evento => {
+        if (evento.target.nodeName == 'BUTTON') {
+            const clickUsuario = evento.target.textContent
+        
+            if (clickUsuario == "Asignar posición" ){
+                try {
+                    // Lógica para interactuar con el usuario y llamar a las funciones adecuadas
+                    const idJugador = prompt("Ingrese el ID de jugador cuya posicion quiere modificar:");
+                    const nuevaPosicion = prompt("Ingrese la nueva posicion:");
+                    asignarPosicion(parseInt(idJugador), nuevaPosicion)
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            } else if (clickUsuario == "Listar jugadores") {
+                listarJugadores()
+            }
+        }
+    })
 };
 
 // Llamar a la función principal para iniciar la aplicación
