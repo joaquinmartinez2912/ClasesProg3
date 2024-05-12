@@ -4,20 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/mystyles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <title>Gestor de equipo de fútbol</title>
 </head>
 
 <body>
-    <h1>Gestor de equipo de fútbol</h1>
-    <div id="botoneraUsuario">
-        <button onclick="agregarJugador()">Agregar jugador</button>
-        <button >Listar jugadores</button>
-        <button>Asignar posición</button>
-        <button>Realizar cambio durante el partido</button>
+    <h1 class="text-center mt-5">Gestor de equipo de fútbol</h1>
+    <div id="botoneraUsuario" class="text-center mt-3">
+        <button onclick="agregarJugador()" class="btn btn-primary mx-2">Agregar jugador</button>
+        <button class="btn btn-primary mx-2" >Listar jugadores</button>
+        <button class="btn btn-primary mx-2">Asignar posición</button>
+        <button class="btn btn-primary mx-2">Realizar cambio durante el partido</button>
     </div>
     
-    <div>
-        <ul id="listaJugadores">
+    <div class="container mt-5" >
+        <ul id="listaJugadores" class="list-group list-group-flush">
 
         </ul>
     </div>
