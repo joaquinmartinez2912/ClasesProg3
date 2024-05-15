@@ -2,7 +2,7 @@ const listaFetch = document.getElementById("listaFetch")
 
 async function ObtenerProductos() {
     try {
-        const response = await fetch('https://fakestoreapi.com/products');
+        const response = await fetch('https://fakestoreapi.com/products/categories');
         const data = await response.json();
 
         console.log(response)
@@ -15,24 +15,24 @@ async function ObtenerProductos() {
     }
 }
 
-// function ObtenerProductos() {
-//     fetch('https://fakestoreapi.com/products')
-//         .then(res => res.json())
-//         .then(data => {
-//             data.forEach(jsonProducto => {
-//                 const productoFetch = crearItemProducto(jsonProducto)
-//                 listaFetch.appendChild(productoFetch)
-//             })
-//         }
-//         )
-// }
-
 function crearItemProducto(producto) {
     const item = document.createElement('li')
     item.classList.add('list-group-item')
     const DatosProducto = document.createElement('p')
-    DatosProducto.textContent = `Nombre: ${producto.title}`
-    item.appendChild(DatosProducto)
+    DatosProducto.textContent = ` ${producto}`
+    const botonMostrar = document.createElement('button')
+    botonMostrar.textContent = 'Mostrar'
+    botonMostrar.classList.add('btn', 'btn-success', 'ml-5', 'flex')
+
+
+    const contenedorBotones = document.createElement('div')
+    contenedorBotones.classList.add('row','space-between')
+    contenedorBotones.id = 'caja_uno'
+    contenedorBotones.appendChild(DatosProducto)
+    contenedorBotones.appendChild(botonMostrar)
+
+    item.appendChild(contenedorBotones)
+    
 
     return item
 }

@@ -1,0 +1,12 @@
+li {
+    display: flex;
+    justify-content: space-between;
+}
+
+#caja_uno {
+    display: flex;
+}
+
+#caja_uno button {
+    margin: 10px;
+}
