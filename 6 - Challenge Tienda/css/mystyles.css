@@ -1,12 +1,11 @@
-li {
-    display: flex;
-    justify-content: space-between;
-}
-
 #caja_uno {
     display: flex;
+    flex-direction: row;
 }
 
-#caja_uno button {
-    margin: 10px;
+#caja_uno button{
+    margin-left: 10PX;
+}
+nav{
+    background-color: yellow;
 }

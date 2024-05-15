@@ -1,40 +1,46 @@
-const listaFetch = document.getElementById("listaFetch")
+const listaCategorias = document.getElementById("listaCategorias")
+const listaProductos = document.getElementById("listaProductos")
 
-async function ObtenerProductos() {
+async function ObtenerCategorias() {
     try {
         const response = await fetch('https://fakestoreapi.com/products/categories');
         const data = await response.json();
 
-        console.log(response)
-        data.forEach(jsonProducto => {
-            const productoFetch = crearItemProducto(jsonProducto);
-            listaFetch.appendChild(productoFetch);
+        data.forEach(categoria => {
+            const categoriaFetch = crearLinkCategoria(categoria);
+            listaCategorias.appendChild(categoriaFetch);
         });
     } catch (error) {
-        console.error('Error al obtener productos:', error);
+        console.error('Error al obtener categorias:', error);
     }
 }
 
-function crearItemProducto(producto) {
-    const item = document.createElement('li')
-    item.classList.add('list-group-item')
-    const DatosProducto = document.createElement('p')
-    DatosProducto.textContent = ` ${producto}`
-    const botonMostrar = document.createElement('button')
-    botonMostrar.textContent = 'Mostrar'
-    botonMostrar.classList.add('btn', 'btn-success', 'ml-5', 'flex')
+function crearLinkCategoria(categoria) {
+    const listItem = document.createElement("li");
 
+    const link = document.createElement("a");
+    link.classList.add("dropdown-item");
+    link.setAttribute("href", "productosCategoria.html");
+    link.textContent = ` ${categoria}`;
 
-    const contenedorBotones = document.createElement('div')
-    contenedorBotones.classList.add('row','space-between')
-    contenedorBotones.id = 'caja_uno'
-    contenedorBotones.appendChild(DatosProducto)
-    contenedorBotones.appendChild(botonMostrar)
-
-    item.appendChild(contenedorBotones)
-    
-
-    return item
+    listItem.appendChild(link);
+    return listItem
 }
 
-ObtenerProductos()
+async function ObtenerProductosPorCategoria(estado) {
+    const ruta = `https://fakestoreapi.com/products/category/${estado}`
+
+    try {
+        const response = await fetch(ruta);
+        const data = await response.json();
+        console.log(data)
+
+
+    } catch (error) {
+        console.error('Error al obtener categorias:', error);
+    }
+}
+
+
+ObtenerCategorias()
+ObtenerProductosPorCategoria('jewelery')
