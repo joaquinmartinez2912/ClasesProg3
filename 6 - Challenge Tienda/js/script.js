@@ -36,31 +36,35 @@ function crearContenedorProducto(producto) {
  
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
-    cardDiv.style.width = "18rem";
+    //NOTE: Ver si conviene poner el ancho directamente o es mejor dejarlo con el wrap y el ancho de columna que recibe de "agregarProductosAContenedor".
+    cardDiv.style.width = "288px"; 
+    cardDiv.style.height = "384px"
+    cardDiv.style.display = "flex";
+    cardDiv.style.flexWrap = "wrap";
+    cardDiv.style.gap = "10px";
 
     const cardImg = document.createElement("img");
     cardImg.className = "card-img-top";
+    cardImg.style.height = "200px"
     cardImg.src = producto.image;
-    cardImg.alt = "Descripción de la imagen";
 
     const cardBodyDiv = document.createElement("div");
     cardBodyDiv.className = "card-body";
+    cardBodyDiv.style.display = "flex";
+    cardBodyDiv.style.flexDirection = "column";
+    cardBodyDiv.style.justifyContent = "space-between";
 
-    const cardTitle = document.createElement("h5");
+    const cardTitle = document.createElement("h6");
     cardTitle.className = "card-title";
     cardTitle.textContent = producto.title;
-
-    const cardText = document.createElement("p");
-    cardText.className = "card-text";
-    // cardText.textContent = producto.description;
 
     const cardLink = document.createElement("a");
     cardLink.className = "btn btn-primary";
     cardLink.href = "#";
-    cardLink.textContent = "Comprar";
+    cardLink.textContent = "Ingresar";
+    cardLink.style.alignSelf = "start";
 
     cardBodyDiv.appendChild(cardTitle);
-    cardBodyDiv.appendChild(cardText);
     cardBodyDiv.appendChild(cardLink);
 
     cardDiv.appendChild(cardImg);
@@ -107,3 +111,6 @@ async function ObtenerProductosPorCategoria(estado) {
 
 
 ObtenerCategorias()
+
+
+
