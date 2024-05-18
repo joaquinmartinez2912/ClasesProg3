@@ -1,5 +1,5 @@
 const listaCategorias = document.getElementById("listaCategorias")
-const listaProductosPorCategoria = document.getElementById("listaProductosDeCategorias")
+const listaProductosPorCategoria = document.getElementById("listaProductosPorCategoria")
 
 async function ObtenerCategorias() {
     try {
@@ -10,7 +10,7 @@ async function ObtenerCategorias() {
             const categoriaFetch = crearLinkCategoria(categoria);
             listaCategorias.appendChild(categoriaFetch);
         });
-        console.log(data)
+       
     } catch (error) {
         console.error('Error al obtener categorias:', error);
     }
@@ -32,17 +32,74 @@ function crearLinkCategoria(categoria) {
     return listItem
 }
 
+function crearContenedorProducto(producto) {
+ 
+    const cardDiv = document.createElement("div");
+    cardDiv.classList.add("card");
+    cardDiv.style.width = "18rem";
+
+    const cardImg = document.createElement("img");
+    cardImg.className = "card-img-top";
+    cardImg.src = producto.image;
+    cardImg.alt = "Descripción de la imagen";
+
+    const cardBodyDiv = document.createElement("div");
+    cardBodyDiv.className = "card-body";
+
+    const cardTitle = document.createElement("h5");
+    cardTitle.className = "card-title";
+    cardTitle.textContent = producto.title;
+
+    const cardText = document.createElement("p");
+    cardText.className = "card-text";
+    // cardText.textContent = producto.description;
+
+    const cardLink = document.createElement("a");
+    cardLink.className = "btn btn-primary";
+    cardLink.href = "#";
+    cardLink.textContent = "Comprar";
+
+    cardBodyDiv.appendChild(cardTitle);
+    cardBodyDiv.appendChild(cardText);
+    cardBodyDiv.appendChild(cardLink);
+
+    cardDiv.appendChild(cardImg);
+    cardDiv.appendChild(cardBodyDiv);
+
+    return cardDiv;
+}
+
+
+function agregarProductosAContenedor(productos) {
+    const row = document.createElement('div');
+    row.className = 'row';
+
+    productos.forEach((producto) => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-4'; 
+
+        const card = crearContenedorProducto(producto);
+        col.appendChild(card);
+        row.appendChild(col);
+    });
+
+    listaProductosPorCategoria.appendChild(row);
+}
 
 async function ObtenerProductosPorCategoria(estado) {
     const ruta = `https://fakestoreapi.com/products/category/${estado}`
-    // TODO: Crear los li que se van a ir sumando a la lista "listaProductosPorCategoria"
-    // TODO: y hacer que se remuevan cuando selecciono otra categoria
     try {
         const response = await fetch(ruta);
         const data = await response.json();
-        console.log(data)
-
-
+        
+        const ArraylistaProductosPorCategoria = Array.from(listaProductosPorCategoria.childNodes)
+        if (ArraylistaProductosPorCategoria.length != 0) {
+            ArraylistaProductosPorCategoria.forEach((producto) => {
+                listaProductosPorCategoria.removeChild(producto)
+            })
+        }
+        
+        agregarProductosAContenedor(data)
     } catch (error) {
         console.error('Error al obtener categorias:', error);
     }
