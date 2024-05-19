@@ -42,14 +42,22 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title"><i class="bi bi-cart4">  Tu Carro:</i></h5>
-                        <ul class="list-group">
-                          
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                               <img src="" alt="">
-                      
-                            </li>
-
-                        </ul>
+                        <div class="table-responsive">
+                          <table id="tablaCarrito" class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th>Nombre</th>
+                                      <th>Cantidad</th>
+                                      <th>Precio</th>
+                                      <th>Total</th>
+                                      <th></th>
+                                  </tr>
+                              </thead>
+                              <tbody id="listaDetalleCarrito">
+                                  <!-- Los elementos del carrito se insertarán aquí -->
+                              </tbody>
+                          </table>
+                      </div>
                     </div>
                 </div>
             </div>
