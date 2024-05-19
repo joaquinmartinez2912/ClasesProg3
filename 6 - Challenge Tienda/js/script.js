@@ -2,6 +2,9 @@ const listaCategorias = document.getElementById("listaCategorias")
 const listaProductosPorCategoria = document.getElementById("listaProductosPorCategoria")
 const listaDetalleProducto = document.getElementById("listaDetalleProducto")
 const listaDetalleCarrito = document.getElementById("listaDetalleCarrito")
+let totalAPagar = document.getElementById("totalizar")
+let tipoDeCamnio = document.getElementById("tipoDeCambio")
+let totalEnPesos = document.getElementById("totalEnPesos")
 
 async function ObtenerCategorias() {
     try {
@@ -225,13 +228,12 @@ function crearDetalleProducto (productoDetalle) {
 
 }
 
-const obtenerCarritoLocalStorage = () => {
+const obtenerCarritoLocalStorage =  () => {
     const carritoString = localStorage.getItem('carrito')
     return carritoString ? JSON.parse(carritoString) : []
-  }
-  
+}
 
-const guardarCarritoLocalStorage = (prodCarrito) => {
+const guardarCarritoLocalStorage = async (prodCarrito) => {
     localStorage.setItem('carrito', JSON.stringify(prodCarrito))
 }
 
@@ -285,7 +287,7 @@ function crearItemCarrito(producto) {
     precio.textContent = `USD ${producto.precio}`
     
     const total = document.createElement('td')
-    total.textContent = producto.cantComprada * producto.precio;
+    total.textContent = `USD ${producto.cantComprada * producto.precio}`
 
     const tdEliminar = document.createElement('td')
     const iconoEliminar = document.createElement('i')
@@ -313,6 +315,7 @@ async function AgregarYMostrarCarrito(producto, cantidad){
         listaCarrito = obtenerCarritoLocalStorage()
         prod =  crearItemCarrito(listaCarrito.at(-1))
         listaDetalleCarrito.appendChild(prod)
+        totalizar(listaCarrito)
 
     } catch(error){
         console.log("Error agregando y mostrando el carrito: ",error)
@@ -320,10 +323,16 @@ async function AgregarYMostrarCarrito(producto, cantidad){
  
 } 
 
-function eliminarDelCarrito (id) {
-    const carrito = obtenerCarritoLocalStorage()
-    const carritoModif = carrito.filter(item => item.id !== id)
-    guardarCarritoLocalStorage(carritoModif)
+async function eliminarDelCarrito (id) {
+    try {
+        const carrito = obtenerCarritoLocalStorage()
+        const carritoModif = carrito.filter(item => item.id !== id)
+        await guardarCarritoLocalStorage(carritoModif)
+        const carritoLocalModif = obtenerCarritoLocalStorage()
+        totalizar(carritoLocalModif)
+    } catch(error){
+        console.log("Error al eliminar el producto", error)
+    }
 
 }
 
@@ -332,12 +341,32 @@ function mostrarCarrito () {
         listaCarrito = obtenerCarritoLocalStorage()
         listaCarrito.forEach(prod => {
             const item = crearItemCarrito(prod)
-            listaDetalleCarrito.appendChild(item)
-        })
+            listaDetalleCarrito.appendChild(item)   
+        }
+    )
+    totalizar(listaCarrito)
     } catch(error){
         console.log("Error mostrando el carrito: ",error)
     }
  
+}
+
+async function totalizar (lista) {
+    try {
+        const response =  await fetch('https://dolarapi.com/v1/dolares/oficial');
+        const data = await response.json()
+        tipoDeCamnio.textContent = `$ ${data.venta}`
+
+        let total = 0
+        lista.forEach(prod => total=total + (prod.cantComprada*prod.precio))
+        totalAPagar.textContent = `USD ${total}`
+
+        let pesificado = parseInt(total) * parseInt(data.venta)
+        totalEnPesos.textContent = `$ ${pesificado}`
+       
+    } catch (error) {
+        console.error('Error al obtener categorias:', error)
+    }
 }
 
 // Programa:
@@ -360,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (detalleCarrito) {
         if (listaDetalleCarrito){
             mostrarCarrito()
+            totalizar()
         }
     }
 });
