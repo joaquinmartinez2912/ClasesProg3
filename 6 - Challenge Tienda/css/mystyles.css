@@ -6,10 +6,34 @@
 #caja_uno button{
     margin-left: 10PX;
 }
+
+#caja_botones  {
+    display: flex;
+    justify-content: start;
+}
+
 nav{
     background-color: yellow;
 }
 
-body{
+body {
     background-color: rgb(241, 239, 239);
 }
+
+
+.jewelery {
+    background-color: rgb(169, 166, 166);
+}
+
+.electronics {
+    background-color: rgb(212, 162, 76); 
+}
+
+.women {
+    background-color: rgb(224, 108, 209);
+}
+
+.men {
+    background-color: rgb(94, 182, 220); 
+}
+

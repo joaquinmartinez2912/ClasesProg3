@@ -130,11 +130,11 @@ function crearDetalleProducto (productoDetalle) {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
     cardDiv.style.width = "600px"; 
-    cardDiv.style.height = "650px"
+    // cardDiv.style.height = "650px"
     cardDiv.style.display = "flex";
     cardDiv.style.flexWrap = "wrap";
-    cardDiv.style.alignItems = "center"; // Centra los elementos verticalmente
-    cardDiv.style.justifyContent = "center"; // Centra los elementos horizontalmente
+    cardDiv.style.alignItems = "center";
+    cardDiv.style.justifyContent = "center";
     cardDiv.style.gap = "10px";
 
     const cardImg = document.createElement("img");
@@ -163,14 +163,57 @@ function crearDetalleProducto (productoDetalle) {
     cardPrice.style.fontSize = "20px"
 
     const cardLink = document.createElement("a");
-    cardLink.className = "btn btn-success";
+    cardLink.className = "btn btn-primary";
     cardLink.textContent = "Agregar al carro";
     cardLink.style.alignSelf = "start";
 
+    const contadorHTML = document.createElement('p')
+    contadorHTML.id = 'contadorHTML'
+    contadorHTML.textContent = '0'
+    contadorHTML.style.textAlign = 'center'
+    contadorHTML.style.margin = '2px'
+    contadorHTML.style.padding = '2px'
+
+    let contadorJS = parseInt(contadorHTML.textContent)
+
+    const BotonSumar = document.createElement('button')
+    BotonSumar.textContent = '+'
+    BotonSumar.classList.add('btn', 'btn-success', 'btn-s')
+    BotonSumar.addEventListener('click', () => {
+        contadorJS++
+        contadorHTML.textContent = contadorJS
+    })
+
+    const BotonRestar = document.createElement('button')
+    BotonRestar.textContent = '-'
+    BotonRestar.classList.add('btn', 'btn-danger', 'btn-s')
+    BotonRestar.addEventListener('click', () => {
+        if (contadorJS <= 0) {
+        contadorHTML.textContent = 0
+        } else {
+        contadorJS--
+        contadorHTML.textContent = contadorJS
+        }
+    })
+
+    const contenedorBotones = document.createElement('div')
+    contenedorBotones.id = 'caja_botones'
+
+    const sumaResta = document.createElement('div')
+    sumaResta.style.display = 'flex'
+    sumaResta.style.justifyContent = 'space-evenly'
+    sumaResta.style.marginLeft = "15px"
+    sumaResta.appendChild(BotonRestar)
+    sumaResta.appendChild(contadorHTML)
+    sumaResta.appendChild(BotonSumar)
+
+    contenedorBotones.appendChild(cardLink)
+    contenedorBotones.appendChild(sumaResta)
+  
     cardBodyDiv.appendChild(cardPrice);
     cardBodyDiv.appendChild(cardTitle);
     cardBodyDiv.appendChild(cardDescription);
-    cardBodyDiv.appendChild(cardLink);
+    cardBodyDiv.appendChild(contenedorBotones);
 
     cardDiv.appendChild(cardImg);
     cardDiv.appendChild(cardBodyDiv);
@@ -189,13 +232,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (categoria) {
         ObtenerProductosPorCategoria(categoria);
-        // localStorage.removeItem('paginaCategoria');
+        localStorage.removeItem('paginaCategoria');
     }
     if (detalleProducto) {
         console.log(detalleProducto)
         console.log(detalleProducto.price)
         mostrarDetalle(detalleProducto);
-        // localStorage.removeItem('productoDetalle');
+        localStorage.removeItem('productoDetalle');
     }
 });
 
