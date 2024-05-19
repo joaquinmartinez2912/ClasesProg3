@@ -365,19 +365,18 @@ async function totalizar (lista) {
         totalEnPesos.textContent = `$ ${pesificado}`
        
     } catch (error) {
-        console.error('Error al obtener categorias:', error)
+        console.error('Error al totalizar:', error)
     }
 }
 
 // Programa:
 
-ObtenerCategorias()
-
 document.addEventListener('DOMContentLoaded', () => {
     const categoria = localStorage.getItem('paginaCategoria')
     const detalleProducto = JSON.parse(localStorage.getItem('productoDetalle'))
     const detalleCarrito = obtenerCarritoLocalStorage()
-    
+
+    ObtenerCategorias()
     if (categoria) {
         ObtenerProductosPorCategoria(categoria)
         localStorage.removeItem('paginaCategoria')
@@ -389,7 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (detalleCarrito) {
         if (listaDetalleCarrito){
             mostrarCarrito()
-            totalizar()
         }
     }
 });
