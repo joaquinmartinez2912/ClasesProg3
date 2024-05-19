@@ -162,20 +162,16 @@ function crearDetalleProducto (productoDetalle) {
     cardPrice.style.margin  = "0px"
     cardPrice.style.fontSize = "20px"
 
-    const cardLink = document.createElement("a");
-    cardLink.className = "btn btn-primary";
-    cardLink.textContent = "Agregar al carro";
-    cardLink.style.alignSelf = "start";
-
+    
     const contadorHTML = document.createElement('p')
     contadorHTML.id = 'contadorHTML'
     contadorHTML.textContent = '0'
     contadorHTML.style.textAlign = 'center'
     contadorHTML.style.margin = '2px'
     contadorHTML.style.padding = '2px'
-
+    
     let contadorJS = parseInt(contadorHTML.textContent)
-
+    
     const BotonSumar = document.createElement('button')
     BotonSumar.textContent = '+'
     BotonSumar.classList.add('btn', 'btn-success', 'btn-s')
@@ -183,7 +179,13 @@ function crearDetalleProducto (productoDetalle) {
         contadorJS++
         contadorHTML.textContent = contadorJS
     })
-
+    
+    const cardLink = document.createElement("a");
+    cardLink.className = "btn btn-primary";
+    cardLink.textContent = "Agregar al carro";
+    cardLink.style.alignSelf = "start";
+    cardLink.onclick = () => {agregarProductoAlCarrito(productoDetalle,contadorJS)}
+    
     const BotonRestar = document.createElement('button')
     BotonRestar.textContent = '-'
     BotonRestar.classList.add('btn', 'btn-danger', 'btn-s')
@@ -222,6 +224,32 @@ function crearDetalleProducto (productoDetalle) {
 
 }
 
+const obtenerCarritoLocalStorage = () => {
+    const carritoString = localStorage.getItem('carrito')
+    return carritoString ? JSON.parse(carritoString) : []
+  }
+  
+
+  const guardarCarritoLocalStorage = (prodCarrito) => {
+    localStorage.setItem('carrito', JSON.stringify(prodCarrito))
+  }
+
+function agregarProductoAlCarrito(producto, cantidad) {
+    const img = producto.image
+    const nombre = producto.title
+    const cantComprada = cantidad
+    const precio = producto.price
+
+    const carrito = obtenerCarritoLocalStorage()
+
+    itemCarrito = {img, nombre,cantComprada,precio}
+    carrito.push(itemCarrito)
+
+    guardarCarritoLocalStorage(carrito)
+
+}
+
+
 // Programa:
 
 ObtenerCategorias()
@@ -235,8 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('paginaCategoria');
     }
     if (detalleProducto) {
-        console.log(detalleProducto)
-        console.log(detalleProducto.price)
         mostrarDetalle(detalleProducto);
         localStorage.removeItem('productoDetalle');
     }
