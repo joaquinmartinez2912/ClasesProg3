@@ -39,11 +39,11 @@ body {
 
 .row-inline {
     display: flex;
-    align-items: center; /* Alinea verticalmente los elementos al centro */
-    justify-content: space-between; /* Espacia uniformemente los elementos */
+    align-items: center; 
+    justify-content: space-between;
   }
   
   .row-inline h5,
   .row-inline p {
-    margin: 0 10px; /* Añade un pequeño margen entre los elementos */
+    margin: 0 10px; 
   }
