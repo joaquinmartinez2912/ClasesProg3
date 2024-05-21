@@ -261,10 +261,11 @@ async function agregarProductoAlCarrito(producto, cantidad) {
         const nombre = producto.title
         const cantComprada = cantidad
         const precio = producto.price
+        const image = producto.image
     
         const carrito = obtenerCarritoLocalStorage()
     
-        itemCarrito = {id,nombre,cantComprada,precio}
+        itemCarrito = {id,nombre,cantComprada,precio, image}
         carrito.push(itemCarrito)
     
         guardarCarritoLocalStorage(carrito)
@@ -276,35 +277,55 @@ async function agregarProductoAlCarrito(producto, cantidad) {
 
 function crearItemCarrito(producto) {
     const item = document.createElement('tr')
-    
-    const nombre = document.createElement('td')
-    nombre.textContent = producto.nombre;
-    
-    const cantidad = document.createElement('td')
-    cantidad.textContent = producto.cantComprada
-    
-    const precio = document.createElement('td')
-    precio.textContent = `USD ${producto.precio}`
-    
-    const total = document.createElement('td')
-    total.textContent = `USD ${producto.cantComprada * producto.precio}`
+    item.innerHTML = `
+    <td> ${producto.nombre}</td>
+    <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
+    `
+    //NOTE: A la etiqueta <i> le agrego un id
+    item.innerHTML = `
+    <td> ${producto.nombre}</td>
+    <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
+    <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i>
+    </td>
+    `
 
-    const tdEliminar = document.createElement('td')
-    const iconoEliminar = document.createElement('i')
-    iconoEliminar.className = 'bi bi-trash'
-    iconoEliminar.style.cursor = 'pointer'
-    iconoEliminar.onclick = async () => {
-        eliminarDelCarrito(producto.id)
-        item.remove()
+    //NOTE: Busco el id que defini en detalle.html fila 56 y le agrego el item que acabo de crear 
+    //NOTE: para que quede dentro del conteto
+    document.getElementById('listaDetalleCarrito').appendChild(item)
+    
+    //NOTE: 
+    document.getElementById(`eliminar${producto.id}`).onclick = async () => {
+        await eliminarDelCarrito(producto.id);
+        item.remove();
     }
+    // const nombre = document.createElement('td')
+    // nombre.textContent = producto.nombre;
+    
+    // const cantidad = document.createElement('td')
+    // cantidad.textContent = producto.cantComprada
+    
+    // const precio = document.createElement('td')
+    // precio.textContent = `USD ${producto.precio}`
+    
+    // const total = document.createElement('td')
+    // total.textContent = `USD ${producto.cantComprada * producto.precio}`
 
-    tdEliminar.appendChild(iconoEliminar)
+    // const tdEliminar = document.createElement('td')
+    // const iconoEliminar = document.createElement('i')
+    // iconoEliminar.className = 'bi bi-trash'
+    // iconoEliminar.style.cursor = 'pointer'
+    // iconoEliminar.onclick = async () => {
+    //     eliminarDelCarrito(producto.id)
+    //     item.remove()
+    // }
 
-    item.appendChild(nombre)
-    item.appendChild(cantidad)
-    item.appendChild(precio)
-    item.appendChild(total)
-    item.appendChild(tdEliminar)
+    // tdEliminar.appendChild(iconoEliminar)
+
+    // item.appendChild(nombre)
+    // item.appendChild(cantidad)
+    // item.appendChild(precio)
+    // item.appendChild(total)
+    // item.appendChild(tdEliminar)
 
     return item;
 }
@@ -371,27 +392,30 @@ async function totalizar (lista) {
 
 // Programa:
 
-document.addEventListener('DOMContentLoaded', () => {
-    const categoria = localStorage.getItem('paginaCategoria')
-    const detalleProducto = JSON.parse(localStorage.getItem('productoDetalle'))
-    const detalleCarrito = obtenerCarritoLocalStorage()
-
-    ObtenerCategorias()
-    if (categoria) {
-        ObtenerProductosPorCategoria(categoria)
-        localStorage.removeItem('paginaCategoria')
-    }
-    if (detalleProducto) {
-        mostrarDetalle(detalleProducto)
-        localStorage.removeItem('productoDetalle')
-    }
-    if (detalleCarrito) {
-        if (listaDetalleCarrito){
-            mostrarCarrito()
+function main () {
+    document.addEventListener('DOMContentLoaded', () => {
+        const categoria = localStorage.getItem('paginaCategoria')
+        const detalleProducto = JSON.parse(localStorage.getItem('productoDetalle'))
+        const detalleCarrito = obtenerCarritoLocalStorage()
+    
+        ObtenerCategorias()
+        if (categoria) {
+            ObtenerProductosPorCategoria(categoria)
+            localStorage.removeItem('paginaCategoria')
         }
-    }
-});
+        if (detalleProducto) {
+            mostrarDetalle(detalleProducto)
+            localStorage.removeItem('productoDetalle')
+        }
+        if (detalleCarrito) {
+            if (listaDetalleCarrito){
+                mostrarCarrito()
+            }
+        }
+    });
+}    
 
+main()
 
 
 
