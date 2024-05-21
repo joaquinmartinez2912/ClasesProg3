@@ -279,25 +279,26 @@ function crearItemCarrito(producto) {
     const item = document.createElement('tr')
     item.innerHTML = `
     <td> ${producto.nombre}</td>
-    <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
     `
     //NOTE: A la etiqueta <i> le agrego un id
     item.innerHTML = `
-    <td> ${producto.nombre}</td>
     <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
-    <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i>
-    </td>
+    <td>${producto.nombre}</td>
+    <td>${producto.cantComprada}</td>
+    <td>USD ${producto.precio}</td>
+    <td>USD ${producto.cantComprada * producto.precio}</td>
+    <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i></td>
     `
 
     //NOTE: Busco el id que defini en detalle.html fila 56 y le agrego el item que acabo de crear 
     //NOTE: para que quede dentro del conteto
     document.getElementById('listaDetalleCarrito').appendChild(item)
     
-    //NOTE: 
     document.getElementById(`eliminar${producto.id}`).onclick = async () => {
         await eliminarDelCarrito(producto.id);
         item.remove();
     }
+
     // const nombre = document.createElement('td')
     // nombre.textContent = producto.nombre;
     
