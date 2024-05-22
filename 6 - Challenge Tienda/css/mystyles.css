@@ -1,3 +1,17 @@
+#cardProducto {
+    width: 288px;
+    height: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#cardProductoInterna {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 #caja_uno {
     display: flex;
     flex-direction: row;

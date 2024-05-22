@@ -44,59 +44,71 @@ function crearLinkCategoria(categoria) {
 }
 
 function crearContenedorProducto(producto) {
- 
     const cardDiv = document.createElement("div")
     cardDiv.classList.add("card")
-    //NOTE: Ver si conviene poner el ancho directamente o es mejor dejarlo con el wrap y el ancho de columna que recibe de "agregarProductosAContenedor".
-    cardDiv.style.width = "288px" 
-    cardDiv.style.height = "400px"
-    cardDiv.style.display = "flex"
-    cardDiv.style.flexWrap = "wrap"
-    cardDiv.style.gap = "10px"
+    cardDiv.id = "cardProducto";
+    cardDiv.innerHTML = `
+        <img class='card-img-top' src=${producto.image} height=200px</img> 
 
-    const cardImg = document.createElement("img")
-    cardImg.className = "card-img-top"
-    cardImg.style.height = "200px"
-    cardImg.src = producto.image
-
-    const cardBodyDiv = document.createElement("div")
-    cardBodyDiv.className = "card-body"
-    cardBodyDiv.style.display = "flex"
-    cardBodyDiv.style.flexDirection = "column"
-    cardBodyDiv.style.justifyContent = "space-between"
-
-    const cardTitle = document.createElement("h6")
-    cardTitle.className = "card-title"
-    cardTitle.textContent = producto.title
-
-    const cardPrice = document.createElement("p")
-    cardPrice.textContent = `$ ${producto.price}`
-    cardPrice.style.margin  = "0px"
-    cardPrice.style.fontSize = "20px"
-
-    const cardLink = document.createElement("a")
-    cardLink.className = "btn btn-primary"
-    cardLink.href = "detalle.html"
-    cardLink.textContent = "Ingresar"
-    cardLink.style.alignSelf = "start"
-    
-    cardLink.onclick = (e) => {
-        e.preventDefault()
-        localStorage.setItem('productoDetalle', JSON.stringify(producto))
-        window.location.href = cardLink.href; 
-        //TODO: Trabajarlo con envio de parametros y no con localStorage
-        // window.location.href = `detalle.html?productId=${producto} `;
-    };
-
-    cardBodyDiv.appendChild(cardPrice)
-    cardBodyDiv.appendChild(cardTitle)
-    cardBodyDiv.appendChild(cardLink)
-
-    cardDiv.appendChild(cardImg)
-    cardDiv.appendChild(cardBodyDiv)
-
+        <div class='card-body' id='cardProductoInterna'>
+            <p style="margin:0px ; font-size:20px">$ ${producto.price}</p>
+            <h6 class='card-title'>${producto.title}</h6>
+            <a class='btn btn-primary' style="align-self : start;" onclick="window.location.href='detalle.html?product=${producto}';"">Ingresar</a>
+        </div>
+    `    
     return cardDiv;
 }
+   
+    // cardDiv.classList.add("card")
+    // //NOTE: Ver si conviene poner el ancho directamente o es mejor dejarlo con el wrap y el ancho de columna que recibe de "agregarProductosAContenedor".
+    // cardDiv.style.width = "288px" 
+    // cardDiv.style.height = "400px"
+    // cardDiv.style.display = "flex"
+    // cardDiv.style.flexWrap = "wrap"
+    // cardDiv.style.gap = "10px"
+
+    // const cardImg = document.createElement("img")
+    // cardImg.className = "card-img-top"
+    // cardImg.style.height = "200px"
+    // cardImg.src = producto.image
+
+    // const cardBodyDiv = document.createElement("div")
+    // cardBodyDiv.className = "card-body"
+    // cardBodyDiv.style.display = "flex"
+    // cardBodyDiv.style.flexDirection = "column"
+    // cardBodyDiv.style.justifyContent = "space-between"
+
+    // const cardTitle = document.createElement("h6")
+    // cardTitle.className = "card-title"
+    // cardTitle.textContent = producto.title
+
+    // const cardPrice = document.createElement("p")
+    // cardPrice.textContent = `$ ${producto.price}`
+    // cardPrice.style.margin  = "0px"
+    // cardPrice.style.fontSize = "20px"
+
+    // const cardLink = document.createElement("a")
+    // cardLink.className = "btn btn-primary"
+    // cardLink.href = "detalle.html"
+    // cardLink.textContent = "Ingresar"
+    // cardLink.style.alignSelf = "start"
+    
+    // cardLink.onclick = (e) => {
+    //     e.preventDefault()
+    //     localStorage.setItem('productoDetalle', JSON.stringify(producto))
+    //     window.location.href = cardLink.href; 
+    //     //TODO: Trabajarlo con envio de parametros y no con localStorage
+    //     // window.location.href = `detalle.html?productId=${producto} `;
+    // };
+
+    // cardBodyDiv.appendChild(cardPrice)
+    // cardBodyDiv.appendChild(cardTitle)
+    // cardBodyDiv.appendChild(cardLink)
+
+    // cardDiv.appendChild(cardImg)
+    // cardDiv.appendChild(cardBodyDiv)
+
+
 
 function agregarProductosAContenedor(productos) {
     const row = document.createElement('div')
