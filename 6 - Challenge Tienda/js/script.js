@@ -83,7 +83,9 @@ function crearContenedorProducto(producto) {
     cardLink.onclick = (e) => {
         e.preventDefault()
         localStorage.setItem('productoDetalle', JSON.stringify(producto))
-        window.location.href = cardLink.href; //NOTE: Ver si hay alguna alternativa.
+        window.location.href = cardLink.href; 
+        //TODO: Trabajarlo con envio de parametros y no con localStorage
+        // window.location.href = `detalle.html?productId=${producto} `;
     };
 
     cardBodyDiv.appendChild(cardPrice)
