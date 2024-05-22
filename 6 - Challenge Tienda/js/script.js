@@ -43,72 +43,21 @@ function crearLinkCategoria(categoria) {
     return listItem
 }
 
-
 function crearContenedorProducto(producto) {
-    const cardDiv = document.createElement("div")
-    cardDiv.classList.add("card")
+    const cardDiv = document.createElement("div");
+    cardDiv.classList.add("card");
     cardDiv.id = "cardProducto";
+    const prodLocal = JSON.stringify(producto); 
     cardDiv.innerHTML = `
-        <img class='card-img-top' src=${producto.image} height=200px</img> 
-
+        <img class='card-img-top' src="${producto.image}" height="200px" alt="Producto">
         <div class='card-body' id='cardProductoInterna'>
-            <p style="margin:0px ; font-size:20px">$ ${producto.price}</p>
+            <p style="margin:0px; font-size:20px">$ ${producto.price}</p>
             <h6 class='card-title'>${producto.title}</h6>
-            <a class='btn btn-primary' style="align-self: start;" href='detalle.html?product=${producto.id}';">Ingresar</a>
-
+            <a class='btn btn-primary' style="align-self: start;" href='detalle.html?product=${producto.id}' onclick='localStorage.setItem("productoDetalle", JSON.stringify(${prodLocal}))'>Ingresar</a>
         </div>
-    `    
+    `;
     return cardDiv;
 }
-   
-    // cardDiv.classList.add("card")
-    // //NOTE: Ver si conviene poner el ancho directamente o es mejor dejarlo con el wrap y el ancho de columna que recibe de "agregarProductosAContenedor".
-    // cardDiv.style.width = "288px" 
-    // cardDiv.style.height = "400px"
-    // cardDiv.style.display = "flex"
-    // cardDiv.style.flexWrap = "wrap"
-    // cardDiv.style.gap = "10px"
-
-    // const cardImg = document.createElement("img")
-    // cardImg.className = "card-img-top"
-    // cardImg.style.height = "200px"
-    // cardImg.src = producto.image
-
-    // const cardBodyDiv = document.createElement("div")
-    // cardBodyDiv.className = "card-body"
-    // cardBodyDiv.style.display = "flex"
-    // cardBodyDiv.style.flexDirection = "column"
-    // cardBodyDiv.style.justifyContent = "space-between"
-
-    // const cardTitle = document.createElement("h6")
-    // cardTitle.className = "card-title"
-    // cardTitle.textContent = producto.title
-
-    // const cardPrice = document.createElement("p")
-    // cardPrice.textContent = `$ ${producto.price}`
-    // cardPrice.style.margin  = "0px"
-    // cardPrice.style.fontSize = "20px"
-
-    // const cardLink = document.createElement("a")
-    // cardLink.className = "btn btn-primary"
-    // cardLink.href = "detalle.html"
-    // cardLink.textContent = "Ingresar"
-    // cardLink.style.alignSelf = "start"
-    
-    // cardLink.onclick = (e) => {
-    //     e.preventDefault()
-    //     localStorage.setItem('productoDetalle', JSON.stringify(producto))
-    //     window.location.href = cardLink.href; 
-    //     //TODO: Trabajarlo con envio de parametros y no con localStorage
-    //     // window.location.href = `detalle.html?productId=${producto} `;
-    // };
-
-    // cardBodyDiv.appendChild(cardPrice)
-    // cardBodyDiv.appendChild(cardTitle)
-    // cardBodyDiv.appendChild(cardLink)
-
-    // cardDiv.appendChild(cardImg)
-    // cardDiv.appendChild(cardBodyDiv)
 
 
 
@@ -134,23 +83,25 @@ async function ObtenerProductosPorCategoria(estado) {
     try {
         const response = await fetch(ruta);
         const data = await response.json();
-        // console.log(data)
         agregarProductosAContenedor(data)
     } catch (error) {
         console.error('Error al obtener categorias:', error)
     }
 }
 
-const queryString = window.location.search
-urlParams = new URLSearchParams(queryString)
-product = urlParams.get('product')
+
 
 async function mostrarDetalle () {
-    const response = await fetch(`https://fakestoreapi.com/products/${product}`);
-    const data = await response.json()
+        const queryString = window.location.search
+        urlParams = new URLSearchParams(queryString)
+        product = urlParams.get('product')
+        const response = await fetch(`https://fakestoreapi.com/products/${product}`);
+        const data = await response.json()
+        console.log("CHAU")
+    
+        const productoDetalle = await crearDetalleProducto(data)
+        listaDetalleProducto.appendChild(productoDetalle)
 
-    const productoDetalle = await crearDetalleProducto(data)
-    listaDetalleProducto.appendChild(productoDetalle)
 }
 
 async function crearDetalleProducto (productoDetalle) {
@@ -312,7 +263,6 @@ function crearItemCarrito(producto) {
     <td>USD ${producto.cantComprada * producto.precio}</td>
     <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i></td>
     `
-
     //NOTE: Busco el id que defini en detalle.html fila 56 y le agrego el item que acabo de crear 
     //NOTE: para que quede dentro del conteto
     document.getElementById('listaDetalleCarrito').appendChild(item)
@@ -322,43 +272,14 @@ function crearItemCarrito(producto) {
         item.remove();
     }
 
-    // const nombre = document.createElement('td')
-    // nombre.textContent = producto.nombre;
-    
-    // const cantidad = document.createElement('td')
-    // cantidad.textContent = producto.cantComprada
-    
-    // const precio = document.createElement('td')
-    // precio.textContent = `USD ${producto.precio}`
-    
-    // const total = document.createElement('td')
-    // total.textContent = `USD ${producto.cantComprada * producto.precio}`
-
-    // const tdEliminar = document.createElement('td')
-    // const iconoEliminar = document.createElement('i')
-    // iconoEliminar.className = 'bi bi-trash'
-    // iconoEliminar.style.cursor = 'pointer'
-    // iconoEliminar.onclick = async () => {
-    //     eliminarDelCarrito(producto.id)
-    //     item.remove()
-    // }
-
-    // tdEliminar.appendChild(iconoEliminar)
-
-    // item.appendChild(nombre)
-    // item.appendChild(cantidad)
-    // item.appendChild(precio)
-    // item.appendChild(total)
-    // item.appendChild(tdEliminar)
-
     return item;
 }
 
 async function AgregarYMostrarCarrito(producto, cantidad){
     try{
         await agregarProductoAlCarrito(producto, cantidad)
-        listaCarrito = obtenerCarritoLocalStorage()
-        prod =  crearItemCarrito(listaCarrito.at(-1))
+        listaCarrito = obtenerCarritoLocalStorage() 
+        prod =  crearItemCarrito(listaCarrito.at(-1)) //Para agregarlo a la parte visual.
         listaDetalleCarrito.appendChild(prod)
         totalizar(listaCarrito)
 
@@ -378,7 +299,6 @@ async function eliminarDelCarrito (id) {
     } catch(error){
         console.log("Error al eliminar el producto", error)
     }
-
 }
 
 function mostrarCarrito () {
@@ -417,7 +337,7 @@ async function totalizar (lista) {
 // Programa:
 
 function main () {
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const categoria = localStorage.getItem('paginaCategoria')
         const detalleProducto = JSON.parse(localStorage.getItem('productoDetalle'))
         const detalleCarrito = obtenerCarritoLocalStorage()
@@ -427,12 +347,10 @@ function main () {
             ObtenerProductosPorCategoria(categoria)
             localStorage.removeItem('paginaCategoria')
         }
-       
-
-            
+        if (detalleProducto) {
             mostrarDetalle()
             // localStorage.removeItem('productoDetalle')
-        
+        }
         if (detalleCarrito) {
             if (listaDetalleCarrito){
                 mostrarCarrito()
