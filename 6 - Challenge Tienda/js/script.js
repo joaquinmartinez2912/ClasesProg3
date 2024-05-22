@@ -43,6 +43,7 @@ function crearLinkCategoria(categoria) {
     return listItem
 }
 
+
 function crearContenedorProducto(producto) {
     const cardDiv = document.createElement("div")
     cardDiv.classList.add("card")
@@ -53,7 +54,8 @@ function crearContenedorProducto(producto) {
         <div class='card-body' id='cardProductoInterna'>
             <p style="margin:0px ; font-size:20px">$ ${producto.price}</p>
             <h6 class='card-title'>${producto.title}</h6>
-            <a class='btn btn-primary' style="align-self : start;" onclick="window.location.href='detalle.html?product=${producto}';"">Ingresar</a>
+            <a class='btn btn-primary' style="align-self: start;" href='detalle.html?product=${producto.id}';">Ingresar</a>
+
         </div>
     `    
     return cardDiv;
@@ -139,12 +141,19 @@ async function ObtenerProductosPorCategoria(estado) {
     }
 }
 
-function mostrarDetalle (producto) {
-    const productoDetalle = crearDetalleProducto(producto)
+const queryString = window.location.search
+urlParams = new URLSearchParams(queryString)
+product = urlParams.get('product')
+
+async function mostrarDetalle () {
+    const response = await fetch(`https://fakestoreapi.com/products/${product}`);
+    const data = await response.json()
+
+    const productoDetalle = await crearDetalleProducto(data)
     listaDetalleProducto.appendChild(productoDetalle)
 }
 
-function crearDetalleProducto (productoDetalle) {
+async function crearDetalleProducto (productoDetalle) {
     const cardDiv = document.createElement("div")
     cardDiv.classList.add("card")
     cardDiv.style.width = "600px"
@@ -418,10 +427,12 @@ function main () {
             ObtenerProductosPorCategoria(categoria)
             localStorage.removeItem('paginaCategoria')
         }
-        if (detalleProducto) {
-            mostrarDetalle(detalleProducto)
-            localStorage.removeItem('productoDetalle')
-        }
+       
+
+            
+            mostrarDetalle()
+            // localStorage.removeItem('productoDetalle')
+        
         if (detalleCarrito) {
             if (listaDetalleCarrito){
                 mostrarCarrito()
