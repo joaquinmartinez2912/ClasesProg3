@@ -43,25 +43,20 @@ function crearLinkCategoria(categoria) {
     return listItem
 }
 
-function crearContenedorProducto(producto) {
-    const cardDiv = document.createElement("div");
-    cardDiv.classList.add("card");
-    cardDiv.id = "cardProducto";
-    const prodLocal = JSON.stringify(producto); 
-    cardDiv.innerHTML = `
-        <img class='card-img-top' src="${producto.image}" height="200px" alt="Producto">
-        <div class='card-body' id='cardProductoInterna'>
-            <p style="margin:0px; font-size:20px">$ ${producto.price}</p>
-            <h6 class='card-title'>${producto.title}</h6>
-            <a class='btn btn-primary' style="align-self: start;" href='detalle.html?product=${producto.id}' onclick='localStorage.setItem("productoDetalle", JSON.stringify(${prodLocal}))'>Ingresar</a>
-        </div>
-    `;
-    return cardDiv;
+// ----------------------------------------------------------
+
+async function ObtenerProductosPorCategoria(estado) {
+    const ruta = `https://fakestoreapi.com/products/category/${estado}`
+    try {
+        const response = await fetch(ruta);
+        const data = await response.json();
+        agregarProductosACategoria(data)
+    } catch (error) {
+        console.error('Error al obtener categorias:', error)
+    }
 }
 
-
-
-function agregarProductosAContenedor(productos) {
+function agregarProductosACategoria(productos) {
     const row = document.createElement('div')
     row.className = 'row'
    
@@ -69,7 +64,7 @@ function agregarProductosAContenedor(productos) {
         const col = document.createElement('div')
         col.className = 'col-md-4 mb-4';
 
-        const card = crearContenedorProducto(producto)
+        const card = crearCardProducto(producto)
         col.appendChild(card)
         row.appendChild(col)
     });
@@ -77,132 +72,189 @@ function agregarProductosAContenedor(productos) {
     listaProductosPorCategoria.appendChild(row);
 }
 
-async function ObtenerProductosPorCategoria(estado) {
-    const ruta = `https://fakestoreapi.com/products/category/${estado}`
-
-    try {
-        const response = await fetch(ruta);
-        const data = await response.json();
-        agregarProductosAContenedor(data)
-    } catch (error) {
-        console.error('Error al obtener categorias:', error)
-    }
+function crearCardProducto(producto) {
+    const cardDiv = document.createElement("div");
+    cardDiv.classList.add("card");
+    cardDiv.id = "cardProducto";
+    cardDiv.innerHTML = `
+        <img class='card-img-top' src="${producto.image}" height="200px" alt="Producto">
+        <div class='card-body' id='cardProductoInterna'>
+            <p style="margin:0px; font-size:20px">$ ${producto.price}</p>
+            <h6 class='card-title'>${producto.title}</h6>
+            <a class='btn btn-primary' style="align-self: start;" href='detalle.html?product=${producto.id}')'>Ingresar</a>
+        </div>
+    `;
+    return cardDiv;
 }
 
+// ----------------------------------------------------------
 
-
-async function mostrarDetalle () {
-        const queryString = window.location.search
-        urlParams = new URLSearchParams(queryString)
-        product = urlParams.get('product')
-        const response = await fetch(`https://fakestoreapi.com/products/${product}`);
+async function mostrarDetalleProducto (productoId) {
+        const response = await fetch(`https://fakestoreapi.com/products/${productoId}`);
         const data = await response.json()
-        console.log("CHAU")
     
         const productoDetalle = await crearDetalleProducto(data)
         listaDetalleProducto.appendChild(productoDetalle)
-
 }
 
-async function crearDetalleProducto (productoDetalle) {
+async function crearDetalleProducto(productoDetalle) {
     const cardDiv = document.createElement("div")
     cardDiv.classList.add("card")
-    cardDiv.style.width = "600px"
-    // cardDiv.style.height = "650px"
-    cardDiv.style.display = "flex"
-    cardDiv.style.flexWrap = "wrap"
-    cardDiv.style.alignItems = "center"
-    cardDiv.style.justifyContent = "center"
-    cardDiv.style.gap = "10px"
+    cardDiv.id = "crearDetalleProductoDiv"
 
-    const cardImg = document.createElement("img")
-    cardImg.className = "card-img-top"
-    cardImg.style.height = "300px"
-    cardImg.style.width = "450px"
-    cardImg.src = productoDetalle.image
-
-    const cardBodyDiv = document.createElement("div")
-    cardBodyDiv.className = "card-body"
-    cardBodyDiv.style.display = "flex"
-    cardBodyDiv.style.flexDirection = "column"
-    cardBodyDiv.style.justifyContent = "space-between"
-
-    const cardTitle = document.createElement("h6")
-    cardTitle.className = "card-title"
-    cardTitle.textContent = productoDetalle.title
-
-    const cardDescription = document.createElement("p")
-    cardDescription.className = "card-text"
-    cardDescription.textContent = productoDetalle.description
-
-    const cardPrice = document.createElement("p")
-    cardPrice.textContent = `$ ${productoDetalle.price}`
-    cardPrice.style.margin  = "0px"
-    cardPrice.style.fontSize = "20px"
-
-    
-    const contadorHTML = document.createElement('p')
-    contadorHTML.id = 'contadorHTML'
-    contadorHTML.textContent = '0'
-    contadorHTML.style.textAlign = 'center'
-    contadorHTML.style.margin = '2px'
-    contadorHTML.style.padding = '2px'
-    
+    cardDiv.innerHTML = `
+        <img class="card-img-top" style="height: 300px; width: 450px;" src="${productoDetalle.image}" />
+        <div id="crearDetalleProductCardBody" class="card-body">
+            <p style="margin: 0px; font-size: 20px;">$ ${productoDetalle.price}</p>
+            <h6 class="card-title">${productoDetalle.title}</h6>
+            <p class="card-text">${productoDetalle.description}</p>
+            <div id="crearDetalleProductBotonera">
+                <a id="agregarAlCarrito" class="btn btn-primary" style="align-self: start;">Agregar al carro</a>
+                <div style="display: flex; justify-content: space-evenly; margin-left: 15px;">
+                    <button id="botonRestar" class="btn btn-danger btn-s">-</button>
+                    <p id="contadorHTML" style="text-align: center; margin: 2px; padding: 2px;">0</p>
+                    <button id="botonSumar" class="btn btn-success btn-s">+</button>
+                </div>
+            </div>
+        </div>
+    `
+    const contadorHTML = cardDiv.querySelector('#contadorHTML')
     let contadorJS = parseInt(contadorHTML.textContent)
-    
-    const BotonSumar = document.createElement('button')
-    BotonSumar.textContent = '+'
-    BotonSumar.classList.add('btn', 'btn-success', 'btn-s')
+
+    const BotonSumar = cardDiv.querySelector('#botonSumar')
+    const BotonRestar = cardDiv.querySelector('#botonRestar')
+    const cardLink = cardDiv.querySelector('#agregarAlCarrito')
+
     BotonSumar.addEventListener('click', () => {
         contadorJS++
         contadorHTML.textContent = contadorJS
-    })
-    
-    const cardLink = document.createElement("a")
-    cardLink.className = "btn btn-primary"
-    cardLink.textContent = "Agregar al carro"
-    cardLink.style.alignSelf = "start"
-    cardLink.onclick = () => {AgregarYMostrarCarrito(productoDetalle,contadorJS)}
-    
-    const BotonRestar = document.createElement('button')
-    BotonRestar.textContent = '-'
-    BotonRestar.classList.add('btn', 'btn-danger', 'btn-s')
+    });
+
     BotonRestar.addEventListener('click', () => {
-        if (contadorJS <= 0) {
-        contadorHTML.textContent = 0
-        } else {
-        contadorJS--
-        contadorHTML.textContent = contadorJS
+        if (contadorJS > 0) {
+            contadorJS--
+            contadorHTML.textContent = contadorJS;
         }
-    })
+    });
 
-    const contenedorBotones = document.createElement('div')
-    contenedorBotones.id = 'caja_botones'
-
-    const sumaResta = document.createElement('div')
-    sumaResta.style.display = 'flex'
-    sumaResta.style.justifyContent = 'space-evenly'
-    sumaResta.style.marginLeft = "15px"
-    sumaResta.appendChild(BotonRestar)
-    sumaResta.appendChild(contadorHTML)
-    sumaResta.appendChild(BotonSumar)
-
-    contenedorBotones.appendChild(cardLink)
-    contenedorBotones.appendChild(sumaResta)
-  
-    cardBodyDiv.appendChild(cardPrice)
-    cardBodyDiv.appendChild(cardTitle)
-    cardBodyDiv.appendChild(cardDescription)
-    cardBodyDiv.appendChild(contenedorBotones)
-
-    cardDiv.appendChild(cardImg)
-    cardDiv.appendChild(cardBodyDiv)
+    cardLink.onclick = () => {
+        console.log("Entro")
+        AgregarYMostrarCarrito(productoDetalle, contadorJS)
+    };
 
     return cardDiv;
+}
+
+// ---------------------
+
+async function AgregarYMostrarCarrito(producto, cantidad){
+    try{
+        await agregarProductoAlCarrito(producto, cantidad) // Porque espera que se agrga al localStorage
+        const listaCarrito = await obtenerCarritoLocalStorage() 
+        const prod = await crearItemCarrito(listaCarrito.at(-1)) //Para agregarlo a la parte visual.
+        listaDetalleCarrito.appendChild(prod)
+        await totalizar(listaCarrito)
+
+    } catch(error){
+        console.log("Error agregando y mostrando el carrito: ",error)
+    }
+} 
+
+async function agregarProductoAlCarrito(producto, cantidad) {
+    try {
+        const id = crearId()
+        const nombre = producto.title
+        const cantComprada = cantidad
+        const precio = producto.price
+        const image = producto.image
+    
+        const carrito = await obtenerCarritoLocalStorage()
+    
+        itemCarrito = {id,nombre,cantComprada,precio, image}
+        carrito.push(itemCarrito)
+    
+        await guardarCarritoLocalStorage(carrito)
+    } catch(error){
+        console.log("Error guardando en el carrito: ",error)
+    }
 
 }
 
-const obtenerCarritoLocalStorage =  () => {
+async function crearItemCarrito(producto) {
+    const item = document.createElement('tr')
+    item.innerHTML = `
+    <td> ${producto.nombre}</td>
+    `
+    //NOTE: A la etiqueta <i> le agrego un id
+    item.innerHTML = `
+    <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
+    <td>${producto.nombre}</td>
+    <td>${producto.cantComprada}</td>
+    <td>USD ${producto.precio}</td>
+    <td>USD ${producto.cantComprada * producto.precio}</td>
+    <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i></td>
+    `
+    //NOTE: Busco el id que defini en detalle.html fila 56 y le agrego el item que acabo de crear 
+    //NOTE: para que quede dentro del contexto
+    document.getElementById('listaDetalleCarrito').appendChild(item)
+    
+    document.getElementById(`eliminar${producto.id}`).onclick = async () => {
+        await eliminarDelCarrito(producto.id);
+        item.remove();
+    }
+
+    return item;
+}
+
+async function eliminarDelCarrito (id) {
+    try {
+        const carrito = obtenerCarritoLocalStorage()
+        const carritoModif = carrito.filter(item => item.id !== id)
+        guardarCarritoLocalStorage(carritoModif)
+        const carritoLocalModif = obtenerCarritoLocalStorage()
+        await totalizar(carritoLocalModif)
+    } catch(error){
+        console.log("Error al eliminar el producto", error)
+    }
+}
+
+async function totalizar (lista) {
+    try {
+        const response =  await fetch('https://dolarapi.com/v1/dolares/oficial');
+        const data = await response.json()
+        tipoDeCamnio.textContent = `$ ${data.venta}`
+
+        let total = 0
+        lista.forEach(prod => total=total + (prod.cantComprada*prod.precio))
+        totalAPagar.textContent = `USD ${total}`
+
+        let pesificado = parseInt(total) * parseInt(data.venta)
+        totalEnPesos.textContent = `$ ${pesificado}`
+       
+    } catch (error) {
+        console.error('Error al totalizar:', error)
+    }
+}
+
+// ---------------------
+
+async function mostrarCarrito () {
+    try{
+        listaCarrito = await obtenerCarritoLocalStorage()
+        listaCarrito.forEach(async (prod) =>  {
+            const item = await crearItemCarrito(prod)
+            listaDetalleCarrito.appendChild(item)   
+        }
+    )
+    await totalizar(listaCarrito)
+    } catch(error){
+        console.log("Error mostrando el carrito: ",error)
+    }
+}
+
+// ----------------------------------------------------------
+
+const obtenerCarritoLocalStorage = async () => {
     const carritoString = localStorage.getItem('carrito')
     return carritoString ? JSON.parse(carritoString) : []
 }
@@ -228,139 +280,40 @@ const crearId = () => {
     return id
 }
 
-async function agregarProductoAlCarrito(producto, cantidad) {
-    try {
-        // const img = producto.image
-        const id = crearId()
-        const nombre = producto.title
-        const cantComprada = cantidad
-        const precio = producto.price
-        const image = producto.image
-    
-        const carrito = obtenerCarritoLocalStorage()
-    
-        itemCarrito = {id,nombre,cantComprada,precio, image}
-        carrito.push(itemCarrito)
-    
-        guardarCarritoLocalStorage(carrito)
-    } catch(error){
-        console.log("Error guardando en el carrito: ",error)
-    }
-
-}
-
-function crearItemCarrito(producto) {
-    const item = document.createElement('tr')
-    item.innerHTML = `
-    <td> ${producto.nombre}</td>
-    `
-    //NOTE: A la etiqueta <i> le agrego un id
-    item.innerHTML = `
-    <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
-    <td>${producto.nombre}</td>
-    <td>${producto.cantComprada}</td>
-    <td>USD ${producto.precio}</td>
-    <td>USD ${producto.cantComprada * producto.precio}</td>
-    <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i></td>
-    `
-    //NOTE: Busco el id que defini en detalle.html fila 56 y le agrego el item que acabo de crear 
-    //NOTE: para que quede dentro del conteto
-    document.getElementById('listaDetalleCarrito').appendChild(item)
-    
-    document.getElementById(`eliminar${producto.id}`).onclick = async () => {
-        await eliminarDelCarrito(producto.id);
-        item.remove();
-    }
-
-    return item;
-}
-
-async function AgregarYMostrarCarrito(producto, cantidad){
-    try{
-        await agregarProductoAlCarrito(producto, cantidad)
-        listaCarrito = obtenerCarritoLocalStorage() 
-        prod =  crearItemCarrito(listaCarrito.at(-1)) //Para agregarlo a la parte visual.
-        listaDetalleCarrito.appendChild(prod)
-        totalizar(listaCarrito)
-
-    } catch(error){
-        console.log("Error agregando y mostrando el carrito: ",error)
-    }
- 
-} 
-
-async function eliminarDelCarrito (id) {
-    try {
-        const carrito = obtenerCarritoLocalStorage()
-        const carritoModif = carrito.filter(item => item.id !== id)
-        await guardarCarritoLocalStorage(carritoModif)
-        const carritoLocalModif = obtenerCarritoLocalStorage()
-        totalizar(carritoLocalModif)
-    } catch(error){
-        console.log("Error al eliminar el producto", error)
-    }
-}
-
-function mostrarCarrito () {
-    try{
-        listaCarrito = obtenerCarritoLocalStorage()
-        listaCarrito.forEach(prod => {
-            const item = crearItemCarrito(prod)
-            listaDetalleCarrito.appendChild(item)   
-        }
-    )
-    totalizar(listaCarrito)
-    } catch(error){
-        console.log("Error mostrando el carrito: ",error)
-    }
- 
-}
-
-async function totalizar (lista) {
-    try {
-        const response =  await fetch('https://dolarapi.com/v1/dolares/oficial');
-        const data = await response.json()
-        tipoDeCamnio.textContent = `$ ${data.venta}`
-
-        let total = 0
-        lista.forEach(prod => total=total + (prod.cantComprada*prod.precio))
-        totalAPagar.textContent = `USD ${total}`
-
-        let pesificado = parseInt(total) * parseInt(data.venta)
-        totalEnPesos.textContent = `$ ${pesificado}`
-       
-    } catch (error) {
-        console.error('Error al totalizar:', error)
-    }
-}
 
 // Programa:
 
 function main () {
-    document.addEventListener('DOMContentLoaded', async () => {
+
         const categoria = localStorage.getItem('paginaCategoria')
-        const detalleProducto = JSON.parse(localStorage.getItem('productoDetalle'))
-        const detalleCarrito = obtenerCarritoLocalStorage()
-    
+
         ObtenerCategorias()
+
+        // Funciona en base a la existencia del localStorage que se genera al hacer click en alguna categoria.
+        // Crea la funcion que obtiene y muestra los productos de cada categoria.
         if (categoria) {
             ObtenerProductosPorCategoria(categoria)
             localStorage.removeItem('paginaCategoria')
         }
-        if (detalleProducto) {
-            mostrarDetalle()
-            // localStorage.removeItem('productoDetalle')
+
+        // Funciona en base a la existencia del parametro que recien nace cuando se hace click en alguno de los productos
+        //  y crea la funcion que muestra el producto individual 
+        const queryString = window.location.search
+        urlParams = new URLSearchParams(queryString)
+        product = urlParams.get('product')
+        if (product) {
+            mostrarDetalleProducto(product) 
         }
-        if (detalleCarrito) {
-            if (listaDetalleCarrito){
-                mostrarCarrito()
-            }
+
+        // Funcionan en base a un localStorage que se genera cuando se ingresa en la pagina del carrito.
+        // Muestra el producto individual, el carrito y crea y ejecuta al click las funcinoes para agreagar al carrito.
+        if (listaDetalleCarrito){
+            mostrarCarrito()
         }
-    });
+   
 }    
 
 main()
-
 
 
 

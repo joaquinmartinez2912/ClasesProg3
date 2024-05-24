@@ -1,3 +1,12 @@
+:root{
+    --index-background: rgb(241, 239, 239);
+    --nav-background: yellow;
+    --jewelery-background: rgb(169, 166, 166);
+    --electronics-background: rgb(212, 162, 76);
+    --men-background: rgb(94, 182, 220);
+    --women-background: rgb(224, 108, 209);
+    }
+
 #cardProducto {
     width: 288px;
     height: 400px;
@@ -12,6 +21,26 @@
     justify-content: space-between;
 }
 
+#crearDetalleProductoDiv {
+    width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#crearDetalleProductCardBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#crearDetalleProductBotonera  {
+    display: flex;
+    justify-content: start;
+}
+
 #caja_uno {
     display: flex;
     flex-direction: row;
@@ -21,43 +50,37 @@
     margin-left: 10PX;
 }
 
-#caja_botones  {
-    display: flex;
-    justify-content: start;
-}
-
 nav{
-    background-color: yellow;
+    background-color: var(--nav-background);
 }
 
 body {
-    background-color: rgb(241, 239, 239);
+    background-color: var(--index-background) ;
 }
 
-
 .jewelery {
-    background-color: rgb(169, 166, 166);
+    background-color: var(--jewelery-background) ;
 }
 
 .electronics {
-    background-color: rgb(212, 162, 76); 
+    background-color: var(--electronics-background) ; 
 }
 
 .women {
-    background-color: rgb(224, 108, 209);
+    background-color: var(--women-background) ;
 }
 
 .men {
-    background-color: rgb(94, 182, 220); 
+    background-color: var(--men-background) ; 
 }
 
-.row-inline {
+.lineaTotales {
     display: flex;
     align-items: center; 
     justify-content: space-between;
   }
   
-  .row-inline h5,
-  .row-inline p {
+  .lineaTotales h5,
+  .lineaTotales p {
     margin: 0 10px; 
   }
