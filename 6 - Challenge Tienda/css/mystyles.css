@@ -2,7 +2,7 @@
     --index-background: rgb(241, 239, 239);
     --nav-background: yellow;
     --jewelery-background: rgb(169, 166, 166);
-    --electronics-background: rgb(212, 162, 76);
+    --electronics-background: rgb(192, 162, 112);
     --men-background: rgb(94, 182, 220);
     --women-background: rgb(224, 108, 209);
     }
@@ -14,6 +14,19 @@
     flex-wrap: wrap;
     gap: 10px;
 }
+
+#cardProducto.card-elevated {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 
+                0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#cardProducto.card-elevated:hover {
+    transform: scale(1.05); /* Aumenta el tamaño de la tarjeta */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 
+                0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
 
 #cardProductoInterna {
     display: flex;

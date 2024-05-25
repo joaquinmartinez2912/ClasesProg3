@@ -75,6 +75,7 @@ function agregarProductosACategoria(productos) {
 function crearCardProducto(producto) {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
+    cardDiv.classList.add("card", "border", "border-3","border-secondary", "card-elevated");
     cardDiv.id = "cardProducto";
     cardDiv.innerHTML = `
         <img class='card-img-top' src="${producto.image}" height="200px" alt="Producto">
@@ -137,9 +138,31 @@ async function crearDetalleProducto(productoDetalle) {
         }
     });
 
+    const detalleProducto = document.getElementById("detalleProducto")
+    const toast = document.createElement("div")
+    toast.innerHTML = `
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-bg-success">
+                <strong class="me-auto">Agregaste al carrito</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-truncate">
+                ${productoDetalle.title}
+            </div>
+        </div>
+    </div>
+    `
+    detalleProducto.appendChild(toast)
+
     cardLink.onclick = () => {
-        console.log("Entro")
         AgregarYMostrarCarrito(productoDetalle, contadorJS)
+
+        const toastLiveExample = document.getElementById('liveToast')
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        
+        toastBootstrap.show()
+   
     };
 
     return cardDiv;
@@ -153,7 +176,7 @@ async function AgregarYMostrarCarrito(producto, cantidad){
         const listaCarrito = await obtenerCarritoLocalStorage() 
         const prod = await crearItemCarrito(listaCarrito.at(-1)) //Para agregarlo a la parte visual.
         listaDetalleCarrito.appendChild(prod)
-        await totalizar(listaCarrito)
+        totalizar(listaCarrito)
 
     } catch(error){
         console.log("Error agregando y mostrando el carrito: ",error)
@@ -211,8 +234,8 @@ async function eliminarDelCarrito (id) {
         const carrito = obtenerCarritoLocalStorage()
         const carritoModif = carrito.filter(item => item.id !== id)
         guardarCarritoLocalStorage(carritoModif)
-        const carritoLocalModif = obtenerCarritoLocalStorage()
-        await totalizar(carritoLocalModif)
+        // const carritoLocalModif = obtenerCarritoLocalStorage()
+        totalizar(carritoModif)
     } catch(error){
         console.log("Error al eliminar el producto", error)
     }
@@ -254,7 +277,7 @@ async function mostrarCarrito () {
 
 // ----------------------------------------------------------
 
-const obtenerCarritoLocalStorage = async () => {
+const obtenerCarritoLocalStorage =  () => {
     const carritoString = localStorage.getItem('carrito')
     return carritoString ? JSON.parse(carritoString) : []
 }
