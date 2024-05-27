@@ -9,7 +9,7 @@
 
 #cardProducto {
     width: 288px;
-    height: 400px;
+    height: 410px;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -35,7 +35,7 @@
 }
 
 #crearDetalleProductoDiv {
-    width: 600px;
+    width: 450px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

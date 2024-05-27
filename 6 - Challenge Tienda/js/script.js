@@ -104,7 +104,7 @@ async function crearDetalleProducto(productoDetalle) {
     cardDiv.id = "crearDetalleProductoDiv"
 
     cardDiv.innerHTML = `
-        <img class="card-img-top" style="height: 300px; width: 450px;" src="${productoDetalle.image}" />
+        <img class="card-img-top" style="height: 300px; width: 400px;" src="${productoDetalle.image}" />
         <div id="crearDetalleProductCardBody" class="card-body">
             <p style="margin: 0px; font-size: 20px;">$ ${productoDetalle.price}</p>
             <h6 class="card-title">${productoDetalle.title}</h6>
@@ -174,7 +174,7 @@ async function AgregarYMostrarCarrito(producto, cantidad){
     try{
         await agregarProductoAlCarrito(producto, cantidad) // Porque espera que se agrga al localStorage
         const listaCarrito =  obtenerCarritoLocalStorage() 
-        const prod = await crearItemCarrito(listaCarrito.at(-1), listaCarrito) //Para agregarlo a la parte visual.
+        const prod = await crearItemCarrito(listaCarrito.at(-1)) //Para agregarlo a la parte visual.
         listaDetalleCarrito.appendChild(prod)
         totalizar(listaCarrito)
 
@@ -203,7 +203,7 @@ async function agregarProductoAlCarrito(producto, cantidad) {
 
 }
 
-async function crearItemCarrito(producto,lista) {
+async function crearItemCarrito(producto) {
     const item = document.createElement('tr')
     item.innerHTML = `
     <td> ${producto.nombre}</td>
@@ -222,18 +222,18 @@ async function crearItemCarrito(producto,lista) {
     document.getElementById('listaDetalleCarrito').appendChild(item)
     
     document.getElementById(`eliminar${producto.id}`).onclick = async () => {
-        eliminarDelCarrito(producto.id, lista);
+        eliminarDelCarrito(producto.id);
         item.remove();
     }
 
     return item;
 }
 
-async function eliminarDelCarrito (id, lista) {
+async function eliminarDelCarrito (id) {
     try {
-        // const carrito = obtenerCarritoLocalStorage()
-        array = Array.from(lista)
-        const carritoModif = array.filter(item => item.id !== id)
+        const carrito = obtenerCarritoLocalStorage()
+       
+        const carritoModif = carrito.filter(item => item.id !== id)
         guardarCarritoLocalStorage(carritoModif)
         // const carritoLocalModif = obtenerCarritoLocalStorage()
         totalizar(carritoModif)
