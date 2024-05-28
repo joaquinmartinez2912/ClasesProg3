@@ -6,6 +6,8 @@ let totalAPagar = document.getElementById("totalizar")
 let tipoDeCamnio = document.getElementById("tipoDeCambio")
 let totalEnPesos = document.getElementById("totalEnPesos")
 
+let carritoEnMemoria = [];
+
 async function ObtenerCategorias() {
     try {
         const response = await fetch('https://fakestoreapi.com/products/categories');
@@ -173,70 +175,79 @@ async function crearDetalleProducto(productoDetalle) {
 async function AgregarYMostrarCarrito(producto, cantidad){
     try{
         await agregarProductoAlCarrito(producto, cantidad) // Porque espera que se agrga al localStorage
-        const listaCarrito =  obtenerCarritoLocalStorage() 
-        const prod = await crearItemCarrito(listaCarrito.at(-1)) //Para agregarlo a la parte visual.
+        // const listaCarrito =  obtenerCarritoLocalStorage() 
+        const prod = await crearItemCarrito(carritoEnMemoria.at(-1)) //Para agregarlo a la parte visual.
         listaDetalleCarrito.appendChild(prod)
-        totalizar(listaCarrito)
+        console.log("gola")
+        console.log(carritoEnMemoria)
+        totalizar(carritoEnMemoria)
 
     } catch(error){
         console.log("Error agregando y mostrando el carrito: ",error)
     }
 } 
 
+
 async function agregarProductoAlCarrito(producto, cantidad) {
     try {
-        const id = crearId()
+        const id = producto.id
         const nombre = producto.title
-        const cantComprada = cantidad
         const precio = producto.price
         const image = producto.image
-    
-        const carrito = obtenerCarritoLocalStorage()
-    
-        itemCarrito = {id,nombre,cantComprada,precio, image}
-        carrito.push(itemCarrito)
-    
-        guardarCarritoLocalStorage(carrito)
-    } catch(error){
-        console.log("Error guardando en el carrito: ",error)
-    }
 
+        let itemExistente = carritoEnMemoria.find(item => item.id === id);
+        if (itemExistente) {
+            itemExistente.cantComprada += cantidad;
+        } else {
+            const cantComprada = cantidad
+            itemCarrito = { id, nombre, cantComprada, precio, image }
+            carritoEnMemoria.push(itemCarrito)
+        }
+
+        await guardarCarritoLocalStorage(carritoEnMemoria)
+    } catch (error) {
+        console.log("Error guardando en el carrito:", error)
+    }
 }
 
 async function crearItemCarrito(producto) {
-    const item = document.createElement('tr')
-    item.innerHTML = `
-    <td> ${producto.nombre}</td>
-    `
-    //NOTE: A la etiqueta <i> le agrego un id
-    item.innerHTML = `
-    <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}</img></td>
-    <td>${producto.nombre}</td>
-    <td>${producto.cantComprada}</td>
-    <td>USD ${producto.precio}</td>
-    <td>USD ${producto.cantComprada * producto.precio}</td>
-    <td> <i class='bi bi-trash ' style="cursor: pointer;"id="eliminar${producto.id}"></i></td>
-    `
-    //NOTE: Busco el id que defini en detalle.html fila 56 y le agrego el item que acabo de crear 
-    //NOTE: para que quede dentro del contexto
-    document.getElementById('listaDetalleCarrito').appendChild(item)
-    
-    document.getElementById(`eliminar${producto.id}`).onclick = async () => {
-        eliminarDelCarrito(producto.id);
-        item.remove();
-    }
 
+    let item = document.getElementById(`item-${producto.id}`);
+    if (item) {
+        console.log("uno")
+        item.querySelector('.cantComprada').textContent = producto.cantComprada;
+        item.querySelector('.total').textContent = `USD ${producto.cantComprada * producto.precio}`;
+    } else {
+        console.log("dos")
+        item = document.createElement('tr')
+        item.id = `item-${producto.id}`;
+        item.innerHTML = `
+            <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}></td>
+            <td>${producto.nombre}</td>
+            <td class='cantComprada'>${producto.cantComprada}</td>
+            <td>USD ${producto.precio}</td>
+            <td class='total'>USD ${producto.cantComprada * producto.precio}</td>
+            <td> <i class='bi bi-trash' style="cursor: pointer;" id="eliminar${producto.id}"></i></td>
+        `;
+        document.getElementById('listaDetalleCarrito').appendChild(item)
+    
+        document.getElementById(`eliminar${producto.id}`).onclick = async () => {
+            await eliminarDelCarrito(producto.id);
+            item.remove();
+        }
+    }
     return item;
 }
 
 async function eliminarDelCarrito (id) {
     try {
-        const carrito = obtenerCarritoLocalStorage()
+        // const carrito = obtenerCarritoLocalStorage()
+        carritoEnMemoria = carritoEnMemoria.filter(item => item.id !== id)
        
-        const carritoModif = carrito.filter(item => item.id !== id)
-        guardarCarritoLocalStorage(carritoModif)
+        // const carritoModif = carrito.filter(item => item.id !== id)
+        await guardarCarritoLocalStorage(carritoEnMemoria)
         // const carritoLocalModif = obtenerCarritoLocalStorage()
-        totalizar(carritoModif)
+        totalizar(carritoEnMemoria)
     } catch(error){
         console.log("Error al eliminar el producto", error)
     }
@@ -264,13 +275,13 @@ async function totalizar (lista) {
 
 async function mostrarCarrito () {
     try{
-        listaCarrito =  obtenerCarritoLocalStorage()
-        listaCarrito.forEach(async (prod) =>  {
+        // listaCarrito =  obtenerCarritoLocalStorage()
+        carritoEnMemoria.forEach(async (prod) =>  {
             const item = await crearItemCarrito(prod)
             listaDetalleCarrito.appendChild(item)   
         }
     )
-    await totalizar(listaCarrito)
+    await totalizar(carritoEnMemoria)
     } catch(error){
         console.log("Error mostrando el carrito: ",error)
     }
@@ -283,7 +294,7 @@ const obtenerCarritoLocalStorage =  () => {
     return carritoString ? JSON.parse(carritoString) : []
 }
 
-const guardarCarritoLocalStorage =  (prodCarrito) => {
+const guardarCarritoLocalStorage = async (prodCarrito) => {
     localStorage.setItem('carrito', JSON.stringify(prodCarrito))
 }
 
@@ -309,6 +320,7 @@ const crearId = () => {
 
 function main () {
 
+        carritoEnMemoria = obtenerCarritoLocalStorage();
         const categoria = localStorage.getItem('paginaCategoria')
 
         ObtenerCategorias()
