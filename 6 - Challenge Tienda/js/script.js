@@ -174,12 +174,13 @@ async function crearDetalleProducto(productoDetalle) {
 
 async function AgregarYMostrarCarrito(producto, cantidad){
     try{
-        await agregarProductoAlCarrito(producto, cantidad) // Porque espera que se agrga al localStorage
+        await agregarProductoAlCarrito(producto, cantidad)
         // const listaCarrito =  obtenerCarritoLocalStorage() 
-        const prod = await crearItemCarrito(carritoEnMemoria.at(-1)) //Para agregarlo a la parte visual.
-        listaDetalleCarrito.appendChild(prod)
-        console.log("gola")
+        const itemAAgregar = carritoEnMemoria.find(item => item.id === producto.id)
+        console.log(itemAAgregar)
         console.log(carritoEnMemoria)
+        const prod = await crearItemCarrito(itemAAgregar) //Para agregarlo a la parte visual.
+        listaDetalleCarrito.appendChild(prod)
         totalizar(carritoEnMemoria)
 
     } catch(error){
@@ -214,19 +215,18 @@ async function crearItemCarrito(producto) {
 
     let item = document.getElementById(`item-${producto.id}`);
     if (item) {
-        console.log("uno")
-        item.querySelector('.cantComprada').textContent = producto.cantComprada;
-        item.querySelector('.total').textContent = `USD ${producto.cantComprada * producto.precio}`;
+        console.log(`Estoy en un item repetido ${producto}`)
+        item.querySelector("#cantComprada").textContent = producto.cantComprada;
+        item.querySelector("#total").textContent = `USD ${producto.cantComprada * producto.precio}`;
     } else {
-        console.log("dos")
         item = document.createElement('tr')
         item.id = `item-${producto.id}`;
         item.innerHTML = `
             <td> <img src=${producto.image} width=30px height=30px alt=${producto.nombre}></td>
             <td>${producto.nombre}</td>
-            <td class='cantComprada'>${producto.cantComprada}</td>
+            <td id="cantComprada">${producto.cantComprada}</td>
             <td>USD ${producto.precio}</td>
-            <td class='total'>USD ${producto.cantComprada * producto.precio}</td>
+            <td id="total">USD ${producto.cantComprada * producto.precio}</td>
             <td> <i class='bi bi-trash' style="cursor: pointer;" id="eliminar${producto.id}"></i></td>
         `;
         document.getElementById('listaDetalleCarrito').appendChild(item)
@@ -297,24 +297,6 @@ const obtenerCarritoLocalStorage =  () => {
 const guardarCarritoLocalStorage = async (prodCarrito) => {
     localStorage.setItem('carrito', JSON.stringify(prodCarrito))
 }
-
-const crearId = () => {
-    const carritoString = localStorage.getItem('carrito')
-    const listaId = carritoString ? JSON.parse(carritoString) : []
-    let id = ''
-    if (listaId.length == 0) {
-        id = 0
-    } else {
-        id = parseInt(listaId.length)
-        let verificacion = listaId.find((prod) => prod.id === parseInt(listaId.length))
-        while (verificacion) {
-            id = parseInt(listaId.length)+1
-            verificacion = listaId.find((prod) => prod.id === parseInt(listaId.length))
-        }
-    }
-    return id
-}
-
 
 // Programa:
 

@@ -40,24 +40,24 @@ const agregarJugador = async () => {
     const jugadores = obtenerJugadoresLocalStorage()
 
     if (!nombre || !edad || !posicion || !estado) {
-      alert('No puede ingresar campos vacios. Reinicie la operacion');
+      alert('No puede ingresar campos vacios. Reinicie la operacion')
     } else {
       // Verificar si el jugador ya existe en el equipo
       const jugadorExistente = jugadores.find(jugador => jugador.nombre.toLowerCase() === nombre.toLowerCase())
-      
+
       if (jugadorExistente) {
         alert('El jugador ya está en el equipo.')
         throw new Error('El jugador ya está en el equipo.')
       } else {
         // Agregar el nuevo jugador al array de jugadores
         jugadores.push({ id, nombre, edad, posicion, estado })
-    
+
         // Guardar los jugadores actualizados en el localStorage
         guardarJugadoresLocalStorage(jugadores)
-    
+
         // Simular una demora de 1 segundo para la operación asíncrona
         await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
         // Mostrar un mensaje de éxito
         alert('Jugador agregado correctamente.')
       }
@@ -85,15 +85,15 @@ let estadoListaJugadores = 'inactivo'
 
 const listarJugadores = async () => {
   // Implementación para listar todos los jugadores
-  try{
+  try {
     if (estadoListaJugadores === 'inactivo') {
       const jugadores = obtenerJugadoresLocalStorage()
-  
+
       jugadores.forEach(itemJugador => {
         const jugador = crearItemJugador(itemJugador)
         listaJugadores.appendChild(jugador)
       })
-  
+
       estadoListaJugadores = 'activa'
     } else if (estadoListaJugadores === 'activa') {
       const arrayListaJugadores = Array.from(listaJugadores.childNodes)
@@ -102,7 +102,7 @@ const listarJugadores = async () => {
       })
       estadoListaJugadores = 'inactivo'
     }
-  } catch (error){
+  } catch (error) {
     console.error('Error:', error)
   }
 }
@@ -110,15 +110,15 @@ const listarJugadores = async () => {
 // Función asíncrona para asignar una nueva posición a un jugador
 const asignarPosicion = async (idJugador, nuevaPosicion) => {
   // Implementación para asignar una nueva posición a un jugador.
-  try{
+  try {
     const jugadores = obtenerJugadoresLocalStorage()
-  
+
     const jugadorModificado = jugadores.find((j) => j.id === idJugador)
-  
+
     if (jugadorModificado) {
       jugadores[jugadorModificado.id].posicion = nuevaPosicion
     }
-  
+
     guardarJugadoresLocalStorage(jugadores)
     listarJugadores()
   } catch (error) {
@@ -158,17 +158,17 @@ const VerificarEstado = async (jugador, estado, mje) => {
 const obtenerJugador = async (texto, estado, mje) => {
   const IdJugador = prompt(`Ingrese el ID de jugador que quiere ${texto}:`)
   // return new Promise( async (resolve, reject)  => { // Tengo que agregarle el async antes de los parametros.
-    try {
-      const jugador = await VerificarJugador(IdJugador)
-      await VerificarEstado(jugador, estado, mje)
-      const jugadores = obtenerJugadoresLocalStorage()
-      return jugadores.find(jugador => jugador.id == IdJugador) 
-      // const resultado = jugadores.find(jugador => jugador.id == IdJugador) 
-      // resolve(resultado)
-    } catch (error) {
-      console.error('Error:', error)
-      await obtenerJugador(texto, estado)
-    }
+  try {
+    const jugador = await VerificarJugador(IdJugador)
+    await VerificarEstado(jugador, estado, mje)
+    const jugadores = obtenerJugadoresLocalStorage()
+    return jugadores.find(jugador => jugador.id == IdJugador)
+    // const resultado = jugadores.find(jugador => jugador.id == IdJugador)
+    // resolve(resultado)
+  } catch (error) {
+    console.error('Error:', error)
+    await obtenerJugador(texto, estado)
+  }
   // }
   // )
 }
@@ -208,7 +208,7 @@ const main = async () => {
         listarJugadores()
       } else if (clickUsuario == 'Realizar cambio durante el partido') {
         const idJugadorEntrante = await obtenerJugador('Ingresar', 'Suplente', 'El jugadror entrante debe ser un suplente')
-        const idJugadorSustituido = await  obtenerJugador('Sustituir', 'Titular', 'El jugadror saliente debe ser un titular')
+        const idJugadorSustituido = await obtenerJugador('Sustituir', 'Titular', 'El jugadror saliente debe ser un titular')
 
         realizarCambio(idJugadorEntrante, idJugadorSustituido)
       }

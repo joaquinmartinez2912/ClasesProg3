@@ -1,21 +1,19 @@
-// import { listaCategorias } from "./script";
+async function Carrousel () {
+  try {
+    const response = await fetch('https://fakestoreapi.com/products')
+    const data = await response.json()
+    console.log(data)
 
-async function Carrousel() {
-    try {
-        const response = await fetch('https://fakestoreapi.com/products');
-        const data = await response.json()
-        console.log(data)
+    const divCarrousel = document.getElementById('carouselExampleFade')
+    const div = document.createElement('div')
 
-        const divCarrousel = document.getElementById("carouselExampleFade")
-        const div = document.createElement("div")
+    const largo = data.length
+    const numeroAleatorio = Math.floor(Math.random() * largo) + 1
+    const numeroAleatorio2 = Math.floor(Math.random() * largo) + 1
+    const numeroAleatorio3 = Math.floor(Math.random() * largo) + 1
+    const numeroAleatorio4 = Math.floor(Math.random() * largo) + 1
 
-        const largo = data.length
-        const numeroAleatorio = Math.floor(Math.random() * largo ) + 1;
-        const numeroAleatorio2 = Math.floor(Math.random() * largo ) + 1;
-        const numeroAleatorio3 = Math.floor(Math.random() * largo ) + 1;
-        const numeroAleatorio4 = Math.floor(Math.random() * largo ) + 1;
-
-        div.innerHTML = `
+    div.innerHTML = `
         <div class="carousel-inner" style = "margin-top:10px">
             <div class="carousel-item active">
                 <div style="max-width: 750px; margin: 0 auto; text-align: center; height: 500px;">
@@ -61,14 +59,12 @@ async function Carrousel() {
             <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: black;"></span>
             <span class="visually-hidden">Next</span>
         </button>
-    `;
-    
-    
-        divCarrousel.appendChild(div)
+    `
 
-    } catch (error) {
-        console.error('Error al obtener categorias:', error)
-    }
+    divCarrousel.appendChild(div)
+  } catch (error) {
+    console.error('Error al obtener categorias:', error)
+  }
 }
 
 Carrousel()
